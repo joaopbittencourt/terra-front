@@ -1,0 +1,66 @@
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-field {
+  flex: 1;
+}
+
+button mat-icon {
+  margin-right: 8px;
+}
+
+.table-container {
+  position: relative;
+  min-height: 200px;
+  max-height: calc(100vh - 250px);
+  overflow: auto;
+  border-radius: 4px;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.mat-column-acoes {
+  width: 100px;
+  text-align: center;
+}
+
+.mat-column-ativo {
+  width: 80px;
+  text-align: center;
+}
+
+.active-icon {
+  color: #4CAF50;
+}
+
+.inactive-icon {
+  color: #F44336;
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 960px) {
+  .mat-column-email,
+  .mat-column-convenio {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .mat-column-dataNascimento,
+  .mat-column-telefone {
+    display: none;
+  }
+}

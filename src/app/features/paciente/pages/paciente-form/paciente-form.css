@@ -1,0 +1,93 @@
+.form-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section {
+  margin: 1rem 0;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.col {
+  flex: 1;
+}
+
+.col-8 {
+  flex: 8;
+}
+
+h3 {
+  color: rgba(0, 0, 0, 0.87);
+  margin-bottom: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+textarea {
+  min-height: 60px;
+}
+
+mat-card-actions {
+  padding: 16px;
+  gap: 8px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header button {
+  margin-left: 1rem;
+}
+
+.section-header mat-icon {
+  margin-right: 8px;
+}
+
+.responsavel-container {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.responsavel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.responsavel-header h4 {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+  .row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .col, .col-8 {
+    flex: 1;
+  }
+}

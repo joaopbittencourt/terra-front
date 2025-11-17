@@ -1,6 +1,6 @@
 {
   "name": "terra",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -22,19 +22,26 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^20.3.0",
-    "@angular/compiler": "^20.3.0",
-    "@angular/core": "^20.3.0",
-    "@angular/forms": "^20.3.0",
-    "@angular/platform-browser": "^20.3.0",
-    "@angular/router": "^20.3.0",
+    "@angular/cdk": "^20.2.9",
+    "@angular/common": "^20.2.9",
+    "@angular/compiler": "^20.2.9",
+    "@angular/core": "^20.2.9",
+    "@angular/forms": "^20.2.9",
+    "@angular/material": "^20.2.8",
+    "@angular/platform-browser": "^20.2.9",
+    "@angular/router": "^20.2.9",
+    "@angular/animations": "^20.2.9",
+    "keycloak-angular": "^20.0.0",
+    "keycloak-js": "^26.2.1",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "save": "^2.9.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.1"
   },
   "devDependencies": {
     "@angular/build": "^20.3.5",
     "@angular/cli": "^20.3.5",
-    "@angular/compiler-cli": "^20.3.0",
+    "@angular/compiler-cli": "^20.2.9",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
