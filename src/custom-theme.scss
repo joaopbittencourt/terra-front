@@ -1,35 +1,317 @@
 
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
-@use '@angular/material' as mat;
+// Include theming for Angular Material v20 (M2 APIs)
+@use '@angular/material/core/m2' as m2;
+@use '@angular/material/core/theming/all-theme' as all-theme;
 
-html {
-  @include mat.theme((
-    color: (
-      primary: mat.$cyan-palette,
-      tertiary: mat.$orange-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
-}
+$primary-palette: m2.define-palette(m2.$purple-palette, 500, 700, 900);
+$accent-palette: m2.define-palette(m2.$cyan-palette, 500, 700, 900);
+$warn-palette: m2.define-palette(m2.$red-palette, 500, 700, 900);
+
+$dark-theme: m2.define-dark-theme($primary-palette, $accent-palette, $warn-palette);
+
+@include all-theme.all-component-themes($dark-theme);
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
+  color-scheme: dark;
+  background: linear-gradient(135deg, #0f0620 0%, #1a0f3e 25%, #2d1b4e 50%, #1a0f3e 75%, #0f0620 100%) !important;
+  background-attachment: fixed;
+  min-height: 100%;
   margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  color: #e2e2ff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
 }
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, #eee, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 60% 70%, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 50% 50%, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 80% 10%, #ddd, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 90% 60%, #eee, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 30% 80%, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 40% 40%, #ddd, rgba(0, 0, 0, 0)),
+    radial-gradient(2px 2px at 70% 20%, #fff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 10% 60%, #eee, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 75% 85%, #ddd, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 15% 15%, #f0f, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 95% 40%, #0ff, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 35% 65%, #f0f, rgba(0, 0, 0, 0)),
+    radial-gradient(1px 1px at 85% 75%, #0ff, rgba(0, 0, 0, 0));
+  background-size:
+    200% 200%, 150% 150%, 180% 180%, 220% 220%, 170% 170%,
+    190% 190%, 210% 210%, 160% 160%, 200% 200%, 240% 240%,
+    250% 250%, 230% 230%, 260% 260%, 210% 210%;
+  background-position:
+    0% 0%, 40% 60%, 130% 270%, 70% 100%, 100% 0%,
+    0% 100%, 70% 0%, 40% 40%, 100% 100%, 60% 30%,
+    25% 45%, 75% 55%, 15% 75%, 90% 25%;
+  animation: twinkle 15s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 50%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 30%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+
+* {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+.mat-mdc-button, .mat-mdc-button .mat-mdc-button-touch-overlay {
+  border-radius: 12px;
+}
+
+.mat-mdc-card {
+  background: rgba(24, 19, 42, 0.25);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.15), 0 0px 30px rgba(168, 85, 247, 0.1);
+  border-radius: 16px;
+}
+
+.mat-mdc-table {
+  background: rgba(18, 12, 35, 0.35);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(147, 51, 234, 0.25);
+}
+
+.mat-mdc-dialog-container {
+  background: rgba(13, 9, 28, 0.7);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  color: #f1f1ff;
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.mat-toolbar {
+  background: linear-gradient(135deg, #0f0620 0%, #1a0f3e 25%, #2d1b4e 50%, #1a0f3e 75%, #0f0620 100%) !important;
+  background-attachment: fixed !important;
+
+
+  backdrop-filter: none;
+  border-bottom: 1px solid rgba(147, 51, 234, 0.15);
+  box-shadow: none;
+}
+
+.mat-sidenav {
+  background: transparent;
+  
+  backdrop-filter: none;
+  border-right: 1px solid rgba(147, 51, 234, 0.15);
+}
+
+.mat-sidenav-container {
+  background: transparent;
+  background: linear-gradient(135deg, #0f0620 0%, #1a0f3e 25%, #2d1b4e 50%, #1a0f3e 75%, #0f0620 100%);
+  background-attachment: fixed !important;
+
+}
+
+.mat-nav-list {
+  background: transparent;
+  
+
+  .mat-list-item {
+    background: transparent;
+
+    &:hover {
+      background: rgba(147, 51, 234, 0.08);
+    }
+
+    &.active-link {
+      background: rgba(147, 51, 234, 0.15);
+      color: #d8b3ff;
+    }
+  }
+}
+
+nav {
+  background: transparent;
+  
+
+  a.mat-button {
+    background: transparent;
+    color: rgba(226, 226, 255, 0.8);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(147, 51, 234, 0.1);
+      color: #d8b3ff;
+    }
+
+    &.active-link {
+      background: rgba(147, 51, 234, 0.2);
+      color: #d8b3ff;
+      border-bottom: 2px solid rgba(168, 85, 247, 0.6);
+    }
+
+    mat-icon {
+      display: inline-block;
+      margin-right: 8px;
+    }
+  }
+}
+
+.mat-mdc-form-field-appearance-fill .mat-mdc-form-field-flex {
+  background-color: rgba(31, 23, 57, 0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(147, 51, 234, 0.15);
+  border-radius: 8px;
+}
+
+.mat-mdc-button {
+  box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
+    transform: translateY(-2px);
+  }
+}
+
+.mat-mdc-icon-button {
+  color: #b399cc;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #d8b3ff;
+  }
+}
+
+.mat-mdc-table tbody tr {
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(147, 51, 234, 0.1);
+  }
+}
+
+.mat-mdc-table th {
+  color: #d8b3ff;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(147, 51, 234, 0.3);
+}
+
+.mat-mdc-table td {
+  color: #e2e2ff;
+  border-bottom: 1px solid rgba(147, 51, 234, 0.1);
+}
+
+.mat-mdc-raised-button {
+  background-color: rgba(147, 51, 234, 0.8);
+  color: #fff;
+
+  &:hover {
+    background-color: rgba(168, 85, 247, 1);
+  }
+}
+
+h2 {
+  color: #d8b3ff;
+  font-weight: 600;
+  text-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+}
+
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    padding-bottom: 0;
+  }
+
+  .mdc-text-field {
+    background-color: rgba(31, 23, 57, 0.25);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(147, 51, 234, 0.15);
+    border-radius: 8px;
+  }
+
+  .mat-mdc-form-field-label {
+    color: rgba(226, 226, 255, 0.7);
+  }
+}
+
+.mat-mdc-select-panel {
+  background: rgba(13, 9, 28, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.mat-mdc-select-panel .mat-mdc-option {
+  color: #e2e2ff;
+
+  &:hover {
+    background-color: rgba(147, 51, 234, 0.2);
+  }
+
+  &.mat-mdc-option-active {
+    background-color: rgba(147, 51, 234, 0.4);
+    color: #d8b3ff;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.mat-mdc-icon-button:active {
+  animation: float 0.3s ease-out;
+}
+
+// Remove default Material backgrounds
+.mat-mdc-app-background {
+  background: transparent !important;
+}
+
+.mdc-elevation--z0,
+.mdc-elevation--z1,
+.mdc-elevation--z2,
+.mdc-elevation--z3,
+.mdc-elevation--z4 {
+  background: transparent;
+}
+
+span {
+  color: rgba(226, 226, 255, 0.9);
+}
+
+

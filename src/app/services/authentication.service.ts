@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import Keycloak from 'keycloak-js';
+import { NotificationService } from './notification/notification';
 //import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -7,9 +8,11 @@ import Keycloak from 'keycloak-js';
 })
 export class AuthenticationService {
     private readonly keycloakService = inject(Keycloak);
+    private readonly notificationsService = inject(NotificationService);
   constructor() {}
 
   redirectToLoginPage(): Promise<void> {
+    
     return this.keycloakService.login();
   }
 

@@ -1,0 +1,14 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.checkbox-group {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+mat-dialog-actions {
+  padding: 16px 0;
+  gap: 8px;
+}

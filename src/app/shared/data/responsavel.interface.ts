@@ -1,6 +1,6 @@
-export interface Responsavel {
-    nome: string;
-    parentesco?: string;
-    telefone: string;
+export interface Guardian {
+    name: string;
+    relationship?: string;
+    phoneNumber: string;
     cpf: string;
 }

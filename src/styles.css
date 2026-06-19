@@ -1,4 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
-
+/* Dark dashboard style with starry background */
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: #e7e7ff;
+}
+
+.mat-mdc-app-background {
+  background: transparent;
+}
+
+/* Ensure content appears above starry background */
+app-root {
+  position: relative;
+  z-index: 1;
+}
+
+/* styles.scss */
+.snackbar-success {
+   background-color: #2e7d32; /* Verde para sucesso */
+  .mdc-snackbar__label {
+    color: #ffffff !important;
+  }
+}
+
+.snackbar-error {
+   background-color: #d32f2f; /* Vermelho para erro */
+  .mdc-snackbar__label {
+    color: #ffffff !important;
+  }
+
+}
+
+.mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+  background-color: transparent !important; /* Deixa o fundo transparente para usar a cor personalizada */
+} 
+

@@ -1,0 +1,210 @@
+<div class="calendar-schedule-container">
+  <!-- Header -->
+  <div class="schedule-header">
+    <div class="header-title">
+      <h1>Calendário de Agendamentos</h1>
+    </div>
+
+    <div class="header-controls">
+      <!-- View buttons: Semanal / Mensal / Diário -->
+      <button mat-button (click)="setViewMode('week')" [color]="(viewMode$ | async) === 'week' ? 'accent' : null" class="view-toggle">
+        <mat-icon>view_week</mat-icon>
+        <span>Semanal</span>
+      </button>
+      <button mat-button (click)="setViewMode('month')" [color]="(viewMode$ | async) === 'month' ? 'accent' : null" class="view-toggle">
+        <mat-icon>calendar_view_month</mat-icon>
+        <span>Mensal</span>
+      </button>
+      <button mat-button (click)="setViewMode('day')" [color]="(viewMode$ | async) === 'day' ? 'accent' : null" class="view-toggle">
+        <mat-icon>today</mat-icon>
+        <span>Diário</span>
+      </button>
+
+      <!-- Navigation -->
+      <button mat-icon-button (click)="goToPreviousNavigation()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <!-- Date picker -->
+      <input matInput
+             [matDatepicker]="picker"
+             [value]="selectedDate$ | async"
+             (dateChange)="selectDate($event.value)"
+             class="date-input"
+             readonly>
+      <mat-datepicker #picker></mat-datepicker>
+
+      <button mat-icon-button (click)="goToNextNavigation()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+
+      <!-- Create button -->
+      <button mat-raised-button color="primary" (click)="openCreateDialog()" class="create-btn">
+        <mat-icon>add</mat-icon>
+        <span>Novo Agendamento</span>
+      </button>
+      
+      <!-- Show only selected day toggle -->
+      <button mat-button (click)="toggleShowOnlyDay()" [color]="(showOnlyDay$ | async) ? 'accent' : null" class="only-day-toggle">
+        <mat-icon>today</mat-icon>
+        <span>{{ (showOnlyDay$ | async) ? 'Apenas dia' : 'Todos os dias' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section" [formGroup]="filterForm">
+    <mat-form-field class="filter-field">
+      <mat-label>Filtrar por Terapeuta</mat-label>
+      <mat-select formControlName="therapist">
+        <mat-option value="">Todos</mat-option>
+        <!-- Add therapist options from service -->
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="filter-field">
+      <mat-label>Filtrar por Paciente</mat-label>
+      <mat-select formControlName="patient">
+        <mat-option value="">Todos</mat-option>
+        <!-- Add patient options from service -->
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="filter-field">
+      <mat-label>Filtrar por Disciplina</mat-label>
+      <mat-select formControlName="discipline">
+        <mat-option value="">Todas</mat-option>
+        <!-- Add discipline options from service -->
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="filter-field">
+      <mat-label>Filtrar por Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="active">Ativo</mat-option>
+        <mat-option value="cancelled">Cancelado</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="loading$ | async" class="loading-container">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error$ | async as error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Week view -->
+  <div *ngIf="(viewMode$ | async) === 'week'" class="week-view">
+    <div class="week-grid-header">
+      <div class="time-column-header"></div>
+      <div class="day-column-header" *ngFor="let day of weekDays">
+        <div class="day-name">{{ day.dayName }}</div>
+        <div class="day-number">{{ day.dayNumber }}</div>
+      </div>
+    </div>
+
+    <div class="week-grid" *ngIf="filteredSchedules$ | async as schedules">
+      <div class="time-slots-column">
+        <div class="time-slot" *ngFor="let slot of timeSlots">
+          {{ slot }}
+        </div>
+      </div>
+
+      <div class="day-column" *ngFor="let day of weekDays">
+        <div class="slot-container" *ngFor="let slot of timeSlots">
+          <div class="schedule-cards">
+            <mat-card
+              *ngFor="let schedule of getTimeSlotSchedulesByEnum(day.date, slot, schedules)"
+              class="schedule-card"
+              [class.cancelled]="!schedule.status"
+              (click)="openRegisterDialog(schedule)">
+              <mat-card-header>
+                <div class="card-patient">{{ schedule.contract.patient.firstName }} {{ schedule.contract.patient.lastName }} | {{ schedule.therapy.name }} | {{ schedule.therapist.name }} </div>
+                <div class="card-status" [class.inactive]="!schedule.status">
+                  {{ schedule.status ? 'Ativo' : 'Cancelado' }}
+                </div>
+                <div>
+                  <button mat-icon-button (click)="$event.stopPropagation(); openEditDialog(schedule)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="$event.stopPropagation(); deleteSchedule(schedule)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-card-header>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day view -->
+  <div *ngIf="(viewMode$ | async) === 'day'" class="day-view">
+    <div class="day-grid" *ngIf="(filteredSchedules$ | async) as schedules">
+      <div class="time-slots-column">
+        <div class="time-slot" *ngFor="let slot of timeSlots">
+          {{ slot }}
+        </div>
+      </div>
+
+      <div class="day-column">
+        <div class="day-header">
+          <div class="day-name">{{ (selectedDate$ | async) | date: 'EEEE' }}</div>
+          <div class="day-number">{{ (selectedDate$ | async) | date: 'dd/MM' }}</div>
+        </div>
+
+        <div class="slot-container" *ngFor="let slot of timeSlots">
+          <div class="schedule-cards">
+            <mat-card *ngFor="let schedule of getTimeSlotSchedulesByEnum((selectedDate$ | async), slot, schedules)"
+                      class="schedule-card"
+                      [class.cancelled]="!schedule.status"
+                      (click)="openRegisterDialog(schedule)">
+              <mat-card-header>
+                <div class="card-patient">{{ schedule.contract.patient.firstName }} {{ schedule.contract.patient.lastName }} | {{ schedule.therapy.name }} | {{ schedule.therapist.name }} </div>
+                <div class="card-status" [class.inactive]="!schedule.status">
+                  {{ schedule.status ? 'Ativo' : 'Cancelado' }}
+                </div>
+                <div>
+                  <button mat-icon-button (click)="$event.stopPropagation(); openEditDialog(schedule)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="$event.stopPropagation(); deleteSchedule(schedule)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-card-header>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Month view -->
+  <div *ngIf="(viewMode$ | async) === 'month'" class="month-view">
+    <div class="month-grid">
+      <div class="month-header-day" *ngFor="let dayName of ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']">
+        {{ dayName }}
+      </div>
+
+      <div
+        *ngFor="let dayObj of getMonthDays()"
+        class="month-day"
+        [class.other-month]="!dayObj.isCurrentMonth">
+        <div class="day-number">{{ dayObj.day }}</div>
+        <div class="day-schedules" *ngIf="dayObj.isCurrentMonth">
+          <div *ngFor="let schedule of dayObj.schedules" class="mini-schedule" [class.cancelled]="!schedule.status" (click)="openRegisterDialog(schedule)">
+            <span class="mini-time">{{ formatTime(schedule.sessionIdEnum.toString()) }}</span>
+            <span class="mini-therapist">{{ schedule.team.id }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

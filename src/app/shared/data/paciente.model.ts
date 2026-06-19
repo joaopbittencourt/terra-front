@@ -1,90 +1,77 @@
-import { Endereco } from './endereco.interface';
-import { Paciente } from './paciente.interface';
-import { Responsavel } from './responsavel.interface';
+import { Address } from './address.interface';
+import { Patient } from './patient.interface';
+import { Guardian } from './guardian.interface';
 
-export class PacienteModel implements Paciente {
+export class PatientModel implements Patient {
     id?: string;
-    primeiroNome!: string;
-    sobrenome?: string;
-    nomeCompleto?: string;
+    firstName!: string;
+    lastName?: string;
     email?: string;
-    dataNascimento?: string | Date;
-    telefone?: string;
-    genero?: 'masculino' | 'feminino' | 'outro' | 'nao_informado';
-    cpf?: string;
-    rg?: string;
-    ativo: boolean = true;
-    endereco?: Endereco;
-    convenio?: string;
-    numeroProntuario?: string;
-    alturaCm?: number;
-    pesoKg?: number;
-    alergias: string[] = [];
-    historicoMedico: string[] = [];
-    responsavel?: Responsavel[] = [];
-    criadoEm?: string | Date;
-    atualizadoEm?: string | Date;
-    observacoes?: string;
+    birthDate?: string | Date;
+    phoneNumber?: string;
+    gender?: 'male' | 'female' | 'other' | 'not_informed';
+    document?: string;
+    document2?: string;
+    status: boolean = true;
+    address?: Address;
+    healthPlan?: string;
+    allergies: string[] = [];
+    medicalHistory: string[] = [];
+    guardians?: Guardian[] = [];
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
+    observations?: string;
 
-    constructor(data: Partial<Paciente>) {
+    constructor(data: Partial<Patient>) {
         Object.assign(this, data);
-        this.nomeCompleto = this.nomeCompleto ?? this.calcNomeCompleto();
-        this.criadoEm = this.criadoEm ?? new Date().toISOString();
-        if (typeof this.ativo === 'undefined') this.ativo = true;
+        this.createdAt = this.createdAt ?? new Date().toISOString();
+        if (typeof this.status === 'undefined') this.status = true;
     }
 
-    private calcNomeCompleto(): string {
-        return [this.primeiroNome, this.sobrenome].filter(Boolean).join(' ');
-    }
-
-    get idade(): number | null {
-        if (!this.dataNascimento) return null;
-        const d = typeof this.dataNascimento === 'string' ? new Date(this.dataNascimento) : this.dataNascimento;
+    get age(): number | null {
+        if (!this.birthDate) return null;
+        const d = typeof this.birthDate === 'string' ? new Date(this.birthDate) : this.birthDate;
         if (isNaN(d.getTime())) return null;
         const diff = Date.now() - d.getTime();
         return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
     }
 
-    toJSON(): Paciente {
+    toJSON(): Patient {
         return {
             id: this.id,
-            primeiroNome: this.primeiroNome,
-            sobrenome: this.sobrenome,
-            nomeCompleto: this.nomeCompleto,
+            firstName: this.firstName,
+            lastName: this.lastName,
             email: this.email,
-            dataNascimento: this.dataNascimento instanceof Date ? this.dataNascimento.toISOString() : this.dataNascimento,
-            telefone: this.telefone,
-            genero: this.genero,
-            cpf: this.cpf,
-            rg: this.rg,
-            ativo: this.ativo,
-            endereco: this.endereco,
-            convenio: this.convenio,
-            numeroProntuario: this.numeroProntuario,
-            alturaCm: this.alturaCm,
-            pesoKg: this.pesoKg,
-            alergias: this.alergias,
-            historicoMedico: this.historicoMedico,
-            responsavel: this.responsavel,
-            criadoEm: this.criadoEm instanceof Date ? this.criadoEm.toISOString() : this.criadoEm,
-            atualizadoEm: this.atualizadoEm instanceof Date ? this.atualizadoEm.toISOString() : this.atualizadoEm,
-            observacoes: this.observacoes,
+            birthDate: this.birthDate instanceof Date ? this.birthDate.toISOString() : this.birthDate,
+            phoneNumber: this.phoneNumber,
+            gender: this.gender,
+            document: this.document,
+            document2: this.document2,
+            status: this.status,
+            address: this.address,
+            healthPlan: this.healthPlan,
+            allergies: this.allergies,
+            medicalHistory: this.medicalHistory,
+            guardians: this.guardians,
+            createdAt: this.createdAt instanceof Date ? this.createdAt.toISOString() : this.createdAt,
+            updatedAt: this.updatedAt instanceof Date ? this.updatedAt.toISOString() : this.updatedAt,
+            observations: this.observations,
         };
     }
 
-    static fromJSON(json: Partial<Paciente>): PacienteModel {
-        const data: Partial<Paciente> = { ...json };
-        if (data.dataNascimento && typeof data.dataNascimento === 'string') {
+    static fromJSON(json: Partial<Patient>): PatientModel {
+        const data: Partial<Patient> = { ...json };
+        if (data.birthDate && typeof data.birthDate === 'string') {
             // keep as string (ISO) or convert if you prefer Date
         }
-        return new PacienteModel(data);
+        return new PatientModel(data);
     }
 
-    validar(): string[] {
-        const erros: string[] = [];
-        if (!this.primeiroNome || !this.primeiroNome.trim()) erros.push('primeiroNome é obrigatório');
-        if (this.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) erros.push('email inválido');
-        if (this.cpf && !/^\d{11}$/.test(this.cpf.replace(/\D/g, ''))) erros.push('cpf deve conter 11 dígitos numéricos');
-        return erros;
+    validate(): string[] {
+        const errors: string[] = [];
+        if (!this.firstName || !this.firstName.trim()) errors.push('firstName is required');
+        if (this.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) errors.push('email is invalid');
+        if (this.document && !/^\d{11}$/.test(this.document.replace(/\D/g, ''))) errors.push('document must contain 11 numeric digits');
+        return errors;
     }
 }

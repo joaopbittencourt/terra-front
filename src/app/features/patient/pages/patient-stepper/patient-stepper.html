@@ -1,0 +1,174 @@
+<mat-horizontal-stepper linear #stepper>
+  <div class="overlay" *ngIf="sending">
+    <mat-progress-spinner mode="indeterminate" diameter="60"></mat-progress-spinner>
+  </div>
+  <mat-step [stepControl]="basicInfo">
+    <form [formGroup]="basicInfo">
+      <ng-template matStepLabel>Dados básicos</ng-template>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="firstName" />
+        <mat-error *ngIf="basicInfo.get('firstName')?.hasError('required')">Nome é obrigatório</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" (loadeddata)="formatCpfInput($event)" (input)="formatCpfInput($event)" maxlength="30" [disabled]="sending" />
+        <mat-error *ngIf="basicInfo.get('cpf')?.hasError('required')">CPF é obrigatório</mat-error>
+        <mat-error *ngIf="basicInfo.get('cpf')?.hasError('invalidCpf')">CPF inválido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phoneNumber" (input)="formatTelephoneInput($event)" [disabled]="sending" />
+        <mat-error *ngIf="basicInfo.get('phoneNumber')?.hasError('required')">Telefone é obrigatório</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+        <mat-error *ngIf="basicInfo.get('email')?.hasError('required')">Email é obrigatório</mat-error>
+        <mat-error *ngIf="basicInfo.get('email')?.hasError('email')">Email inválido</mat-error>
+      </mat-form-field>
+
+      <div formArrayName="guardians">
+        <div *ngFor="let _ctrl of guardians.controls; let i = index" [formGroupName]="i" class="responsible-block">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>CPF do responsável</mat-label>
+            <input matInput formControlName="cpf" (input)="formatCpfInputGuardian(i, $event)" (blur)="checkGuardianByCpf(i)" maxlength="14" />
+            <mat-error *ngIf="guardians.controls[i].get('cpf')?.hasError('required')">CPF é obrigatório</mat-error>
+            <mat-error *ngIf="guardians.controls[i].get('cpf')?.hasError('invalidCpf')">CPF inválido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Nome do responsável</mat-label>
+            <input matInput formControlName="name" (blur)="onGuardianNameBlur(i)" [readonly]="guardians.controls[i].get('exists')?.value" />
+            <mat-error *ngIf="guardians.controls[i].get('name')?.hasError('required')">Nome do responsável é obrigatório</mat-error>
+          </mat-form-field>
+
+          <button mat-icon-button color="warn" aria-label="Remover responsável" *ngIf="guardians.controls.length > 1" (click)="removeGuardian(i)">
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+
+        <div class="add-responsible">
+          <button mat-button color="primary" (click)="addGuardian()" [disabled]="guardians.controls.length >= 2">Adicionar responsável</button>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="cep" (input)="formatCepInput($event)" />
+        <mat-error *ngIf="basicInfo.get('cep')?.hasError('required')">CEP é obrigatório</mat-error>
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-button (click)="cancel()">Cancelar</button>
+        <button mat-flat-button color="primary" (click)="saveBasicInfo(stepper)" [disabled]="sending || basicInfo.invalid">
+          <mat-icon *ngIf="sending">hourglass_top</mat-icon>
+          <span *ngIf="!sending">Avançar</span>
+          <span *ngIf="sending">Enviando...</span>
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="agreementInfo">
+    <form [formGroup]="agreementInfo">
+      <ng-template matStepLabel>Plano / Particular</ng-template>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tem plano de saúde?</mat-label>
+        <mat-select formControlName="hasHealthPlan" [disabled]="sending">
+          <mat-option [value]="true">Sim</mat-option>
+          <mat-option [value]="false">Não</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div *ngIf="agreementInfo.get('hasHealthPlan')?.value">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Plano de Saúde</mat-label>
+          <mat-select formControlName="healthPlanId" [disabled]="sending || loadingHealthPlans">
+            <mat-option *ngIf="loadingHealthPlans" [disabled]="true">Carregando planos...</mat-option>
+            <mat-option *ngFor="let p of healthPlans" [value]="p.id">{{p.name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="agreementInfo.get('healthPlanId')?.hasError('required')">Selecione um plano</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="!agreementInfo.get('hasHealthPlan')?.value">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Modalidade</mat-label>
+          <mat-select formControlName="modalityId" [disabled]="sending || loadingModalitiyList">
+            <mat-option *ngIf="loadingModalitiyList" [disabled]="true">Carregando modalidades...</mat-option>
+            <mat-option *ngFor="let m of modalityList" [value]="m.id">{{m.name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="agreementInfo.get('modality')?.hasError('required')">Selecione uma modalidade</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="actions">
+        <button mat-button (click)="cancel()">Cancelar</button>
+        <button mat-flat-button color="primary" (click)="saveAgreementInfo(stepper)" [disabled]="sending || agreementInfo.invalid"> 
+          <span *ngIf="!sending">Avançar</span>
+          <span *ngIf="sending">Enviando...</span>
+        </button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="therapyInfo">
+    <form [formGroup]="therapyInfo">
+      <ng-template matStepLabel>Seleção de Terapia</ng-template>
+
+      <div formArrayName="assignments">
+        <div *ngFor="let _assign of assignments.controls; let i = index" [formGroupName]="i" class="therapy-assignment">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Terapia</mat-label>
+            <mat-select formControlName="therapyId">
+              <mat-option *ngFor="let th of therapies" [value]="th.id">{{th.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="assignments.at(i).get('therapyId')?.hasError('required')">Selecione uma terapia</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Terapeuta</mat-label>
+            <mat-select formControlName="therapistId">
+              <mat-option *ngFor="let t of therapists" [value]="t.id" [disabled]="getDisableTherapyOption(t, assignments.at(i).get('therapyId')?.value)">{{t.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="assignments.at(i).get('therapistId')?.hasError('required')">Selecione um terapeuta</mat-error>
+          </mat-form-field>
+
+          <div class="sessions-grid">
+            <label>Horários disponíveis</label>
+            <div class="sessions-list">
+              <mat-checkbox *ngFor="let s of getSessionList()"  [checked]="isSessionSelected(i, s)" (change)="toggleSession(i, s)" [disabled]="!therapistAllowsSession(i, s)">{{s}}</mat-checkbox>
+            </div>
+          </div>
+
+          <div class="assignment-actions">
+            <button mat-mini-button color="warn" (click)="removeAssignment(i)">Remover</button>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+
+      <div class="add-therapy">
+        <button mat-button color="primary" (click)="addAssignment()" [disabled]="!allowMultipleTherapies() && assignments.length >= 1">Adicionar terapia</button>
+      </div>
+
+      <div class="actions">
+        <button mat-button (click)="cancel()">Cancelar</button>
+        <button mat-flat-button color="primary" (click)="saveTherapyInfo(stepper)" [disabled]="therapyInfo.invalid || sending">Avançar</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Step 4 (placeholder)</ng-template>
+    <p>Conteúdo a ser implementado posteriormente.</p>
+      <div class="actions">
+      <button mat-button (click)="cancel()">Cancelar</button>
+      <button mat-flat-button color="primary" (click)="cancel()">Concluir</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

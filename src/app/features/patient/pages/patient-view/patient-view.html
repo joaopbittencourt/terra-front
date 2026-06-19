@@ -1,0 +1,86 @@
+  <div class="overlay" *ngIf="sending">
+    <mat-progress-spinner mode="indeterminate" diameter="60"></mat-progress-spinner>
+  </div>
+  
+    <div class="patient-view-layout">
+     
+        <aside class="patient-info">
+  <section class="info-section patient-basic">
+    <header>
+      <h3>Informações do Paciente</h3>
+    </header>
+    <div class="content">
+      <p><strong>Nome:</strong> {{patient?.firstName}}</p>
+      <p><strong>CPF:</strong> {{patient?.document || '00000000000' | cpf}}</p>
+      <p><strong>Telefone:</strong> {{patient?.phoneNumber || '00000000000' | phoneNumber}}</p>
+      <p><strong>Email:</strong> {{patient?.email}}</p>
+      <div>
+        <div *ngFor="let guardian of guardianList; let i = index">
+          <p><strong>Responsável {{i + 1}}:</strong></p>
+          <p style="margin-left: 20px;"><strong>Nome:</strong> {{guardian.name}}</p>
+          <p style="margin-left: 20px;"><strong>CPF:</strong> {{guardian.cpf.toString() | cpf}}</p>
+        </div>
+      </div>
+      <p *ngIf="false"><strong>CEP:</strong></p>
+    </div>
+  </section>
+
+  <section class="info-section contract-info">
+    <header>
+      <h3>Informações do Contrato</h3>
+    </header>
+    <div class="content">
+      <p><strong>Plano de Saúde?</strong> {{healthInsurance ? 'Sim' : 'Não'}}</p>
+      <ng-container *ngIf="healthInsurance">
+        <p><strong>Plano escolhido:</strong> {{healthInsurance.name}}</p>
+      </ng-container>
+      <ng-container *ngIf="contract && contract.modality">
+        <p><strong>Modalidade escolhida:</strong> {{contract.modality?.name}}</p>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="info-section therapies-info">
+    <header>
+      <h3>Terapias contratadas</h3>
+    </header>
+    <div class="content">
+      <div *ngFor="let therapy of therapyList; let i = index">
+        <p style="margin-left: 20px;"><strong>{{therapy.name}}</strong> </p>
+      </div>
+    </div>
+  </section>
+</aside>
+      <aside class="patient-sessions card">
+        <h2>Histórico de sessões</h2>
+        <div *ngIf="loadingSessions" class="loading">
+          <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+        </div>
+        <div *ngIf="!loadingSessions">
+          <ng-container *ngIf="patientSessions && patientSessions.length > 0; else noSessions">
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let s of patientSessions" class="session-card">
+                <mat-expansion-panel-header class="session-header">
+                  <mat-panel-title>
+                    {{'Terapia: ' + s.therapy.name + ' - ' + s.therapist?.name}}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    <span class="session-date">{{ s.date | date:'dd/MM/yyyy' }}</span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="session-content">
+                  <p class="session-notes" [style.white-space]="'pre-wrap'">
+                    {{ s.description || 'Sem descrição disponível.' }}
+                  </p>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </ng-container>
+          <ng-template #noSessions>
+            <p>Nenhuma sessão registrada.</p>
+          </ng-template>
+        </div>
+      </aside>
+      </div>
+      
+      

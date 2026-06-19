@@ -1,0 +1,107 @@
+<h2 mat-dialog-title>{{data?.therapist ? 'Editar' : 'Novo'}} Terapeuta</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field class="full-width">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" placeholder="Ex: Dr. João Silva">
+      <mat-error>{{getErrorMessage('name')}}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username" placeholder="Ex: joaosilva">
+      <mat-error>{{getErrorMessage('username')}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" placeholder="Ex: joao@example.com">
+      <mat-error>{{getErrorMessage('email')}}</mat-error>
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field class="col">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" placeholder="Ex: 12345678900">
+        <mat-error>{{getErrorMessage('cpf')}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="col">
+        <mat-label>Registro do Órgão</mat-label>
+        <input matInput formControlName="professionalRegistration" placeholder="Ex: CREFITO 001/SP">
+        <mat-error>{{getErrorMessage('professionalRegistration')}}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field class="full-width">
+      <mat-label>Telefone</mat-label>
+      <input matInput formControlName="phoneNumber" placeholder="Ex: (11) 99999-9999">
+    </mat-form-field>
+
+    <div class="checkbox-group">
+      <mat-checkbox formControlName="active">Ativo</mat-checkbox>
+    </div>
+
+    <div class="terapias-section">
+      <h3>Terapias que oferece</h3>
+      <p class="terapias-info">Selecione as terapias que este terapeuta oferece:</p>
+
+      <div class="terapias-container">
+        <mat-chip-set>
+          <mat-chip
+            *ngFor="let therapy of availableTherapies"
+            [highlighted]="isTherapySelected(therapy)"
+            (click)="toggleTherapy(therapy)"
+            class="selectable-chip">
+            {{therapy.name}}
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+
+      <mat-error *ngIf="selectedTherapies.length === 0" class="terapias-error">
+        Selecione pelo menos uma terapia
+      </mat-error>
+    </div>
+
+    <div class="sessions-section">
+      <h3>Sessões Disponíveis</h3>
+      <p class="sessions-info">Selecione as sessões que este terapeuta está disponível:</p>
+      
+
+      <div class="table-responsive">
+        <table class="sessions-table">
+          <thead>
+            <tr>
+              <th *ngFor="let day of days">{{ day }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of sessionRows"  >
+              <td *ngFor="let session of row" >
+                <mat-chip-set *ngIf="session">
+                  <mat-chip
+                    [highlighted]="isSessionSelected(session)"
+                    (click)="toggleSession(session)"
+                    class="selectable-chip">
+                    {{ extractHour(session) }}
+                  </mat-chip>
+                </mat-chip-set>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <mat-error *ngIf="selectedSessions.length === 0" class="session-error">
+        Selecione pelo menos uma sessão
+      </mat-error>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!form.valid || selectedTherapies.length === 0 || selectedSessions.length === 0">
+    Salvar
+  </button>
+</mat-dialog-actions>

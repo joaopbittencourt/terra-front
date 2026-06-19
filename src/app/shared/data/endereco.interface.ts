@@ -1,10 +1,10 @@
-export interface Endereco {
-    rua?: string;
-    numero?: string;
-    complemento?: string;
-    bairro?: string;
-    cidade?: string;
-    estado?: string;
-    cep?: string;
-    pais?: string;
+export interface Address {
+    streetName?: string;
+    number?: string;
+    complement?: string;
+    neighborhood?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    country?: string;
 }

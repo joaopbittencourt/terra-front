@@ -1,0 +1,115 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
+
+import { Therapy as TherapyInterface } from '../../shared/data/therapy.interface';
+import { TherapyFormDialogComponent } from './therapy-form-dialog/therapy-form-dialog';
+import { TherapyService } from '../../shared/services/therapy.service';
+import { NotificationService } from '../../services/notification/notification';
+
+@Component({
+  selector: 'app-therapy',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatTooltipModule,
+    MatChipsModule
+  ],
+  templateUrl: './therapy.html',
+  styleUrl: './therapy.css'
+})
+export class TherapyComponent implements OnInit {
+  //displayedColumns: string[] = ['name', 'modalities', 'active', 'actions'];
+  displayedColumns: string[] = ['name', 'active', 'actions'];
+
+  dataSource: TherapyInterface[] = [];
+
+  private notification = inject(NotificationService);
+
+  constructor(private dialog: MatDialog, private therapyService:TherapyService) {}
+
+  ngOnInit(): void {
+    this.therapyService.getAll().subscribe({
+      next: (therapies: TherapyInterface[]) => { this.dataSource = therapies; },
+      error: (err) => { console.error('Error loading therapies', err); this.notification.showError('Erro ao carregar terapias: ' + (err?.message || err)); }
+    });
+  }
+
+  openForm(therapy?: TherapyInterface): void {
+    const dialogRef = this.dialog.open(TherapyFormDialogComponent, {
+      width: '600px',
+      data: therapy
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const id = result.id;
+        this.therapyService.create(result).subscribe({
+          next: (data:TherapyInterface) => {
+            if (id) {
+            // Editar
+            const index = this.dataSource.findIndex(t => t.id === result.id);
+            if (index !== -1) {
+              this.dataSource[index] = result;
+              this.dataSource = [...this.dataSource];
+            }
+          } else {
+            // Criar
+            result.id = Date.now().toString();
+            this.dataSource = [...this.dataSource, result];
+          }
+            this.notification.showSuccess('Terapia salva com sucesso');
+          },
+          error: (err) => {
+            console.error('Error saving therapy', err);
+            this.notification.showError('Erro ao salvar terapia: ' + (err?.message || err));
+          }
+        });
+      }
+    });
+  }
+
+  onEdit(therapy: TherapyInterface): void {
+    this.openForm(therapy);
+  }
+
+  onDelete(therapy: TherapyInterface): void {
+    const name = therapy.name || 'Therapy';
+    if (confirm(`Are you sure you want to delete "${name}"?`)) {
+      this.dataSource = this.dataSource.filter(t => t.id !== therapy.id);
+    }
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    // Implementar lógica de filtro aqui
+    console.log('Filter:', filterValue);
+  }
+
+  //getModalities(therapy: TherapyInterface): string {
+  //  const values = therapy.values;
+  //  if (!values || values.length === 0) return '';
+  //  return values.map(v => {
+  //    const modality = typeof v.modality === 'string' ? v.modality : (v.modality?.modality || '');
+  //    const price = v.value || 0;
+  //    return `${modality} (R$ ${price.toFixed(2)})`;
+  //  }).join(', ');
+  //}
+}

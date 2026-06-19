@@ -1,27 +1,25 @@
-import { Endereco } from './endereco.interface';
-import { Responsavel } from './responsavel.interface';
+import { Address } from './address.interface';
+import { Guardian } from './guardian.interface';
+import { ServicePackage } from './service-package.interface';
 
-export interface Paciente {
+export interface Patient {
     id?: string;
-    primeiroNome: string;
-    sobrenome?: string;
-    nomeCompleto?: string;
+    firstName: string;
+    lastName?: string;
     email?: string;
-    dataNascimento?: string | Date;
-    telefone?: string;
-    genero?: 'masculino' | 'feminino' | 'outro' | 'nao_informado';
-    cpf?: string;
-    rg?: string;
-    ativo?: boolean;
-    endereco?: Endereco;
-    convenio?: string;
-    numeroProntuario?: string;
-    alturaCm?: number;
-    pesoKg?: number;
-    alergias?: string[];
-    historicoMedico?: string[];
-    responsavel?: Responsavel[];
-    criadoEm?: string | Date;
-    atualizadoEm?: string | Date;
-    observacoes?: string;
+    birthDate?: string | Date;
+    phoneNumber?: string;
+    gender?: 'male' | 'female' | 'other' | 'not_informed';
+    document?: string;
+    document2?: string;
+    status?: boolean;
+    address?: Address;
+    healthPlan?: string;
+    servicePackage?:ServicePackage;
+    allergies?: string[];
+    medicalHistory?: string[];
+    guardians?: Guardian[];
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
+    observations?: string;
 }

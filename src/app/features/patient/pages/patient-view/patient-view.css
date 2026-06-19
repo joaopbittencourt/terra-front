@@ -1,0 +1,48 @@
+
+.patient-view-layout {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	gap: 4px;
+	align-items: flex-start;
+	width: 100%;
+}
+.patient-info{
+	flex: 0 0 400px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.patient-sessions {
+	flex: 2 2 100%;
+	margin-left: 12px;
+}
+
+.info-section, .patient-sessions {
+	padding: 12px;
+	border-radius: 8px;
+	background: rgba(255,255,255,0.02);
+	border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Espaçamento entre painéis de sessão (mat-expansion-panel) */
+.patient-sessions .session-card {
+	margin-bottom: 12px;
+	cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M12 2c-.6 0-1 .4-1 1v3.1L7.1 11c-.3.3-.5.8-.5 1.3V17c0 .6.4 1 1 1h4.7c.5 0 1-.2 1.3-.5L18 14.1V10c0-1.1-.9-2-2-2h-3V3c0-.6-.4-1-1-1z'/%3E%3C/svg%3E") 8 8, pointer;
+}
+.patient-sessions .session-card:last-child {
+    margin-bottom: 0;
+}
+
+/* Cursor em forma de foguete no header do painel */
+.patient-sessions .session-card .session-header {
+}
+
+/* Também aplicar ao elemento mat-expansion-panel como fallback */
+.patient-sessions mat-expansion-panel {
+	cursor: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffffff' d='M12 2c-.6 0-1 .4-1 1v3.1L7.1 11c-.3.3-.5.8-.5 1.3V17c0 .6.4 1 1 1h4.7c.5 0 1-.2 1.3-.5L18 14.1V10c0-1.1-.9-2-2-2h-3V3c0-.6-.4-1-1-1z'/%3E%3C/svg%3E") 8 8, pointer;
+}
+
+
+
+

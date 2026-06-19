@@ -1,0 +1,247 @@
+<div class="form-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ form.get('id')?.value ? 'Editar' : 'Novo' }} Paciente</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-fields">
+        <!-- Informações Básicas -->
+        <div class="section">
+          <h3>Informações Básicas</h3>
+          
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Nome</mat-label>
+              <input matInput formControlName="firstName" placeholder="Ex.: João">
+              <mat-error>{{getErrorMessage('firstName')}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>Sobrenome</mat-label>
+              <input matInput formControlName="lastName" placeholder="Ex.: Silva">
+              <mat-error>{{getErrorMessage('lastName')}}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Documento</mat-label>
+              <input matInput formControlName="document" placeholder="Ex.: 12345678900">
+              <mat-error>{{getErrorMessage('document')}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>RG</mat-label>
+              <input matInput formControlName="rg" placeholder="Ex.: 123456789">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Data de Nascimento</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="birthDate">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error>{{getErrorMessage('birthDate')}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>Gênero</mat-label>
+              <mat-select formControlName="gender">
+                <mat-option *ngFor="let opcao of genderOptions" [value]="opcao.value">
+                  {{opcao.label}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Contato -->
+        <div class="section">
+          <h3>Contato</h3>
+          
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" placeholder="Ex.: joao@email.com">
+              <mat-error>{{getErrorMessage('email')}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>Telefone</mat-label>
+              <input matInput formControlName="phoneNumber" placeholder="Ex.: (11) 99999-9999">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Endereço -->
+        <div class="section" formGroupName="address">
+          <h3>Endereço</h3>
+          
+          <div class="row">
+            <mat-form-field class="col-8">
+              <mat-label>Rua</mat-label>
+              <input matInput formControlName="street">
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>Número</mat-label>
+              <input matInput formControlName="number">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Complemento</mat-label>
+              <input matInput formControlName="complement">
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>Bairro</mat-label>
+              <input matInput formControlName="neighborhood">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Cidade</mat-label>
+              <input matInput formControlName="city">
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>Estado</mat-label>
+              <input matInput formControlName="state">
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>CEP</mat-label>
+              <input matInput formControlName="zipCode">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Responsáveis -->
+        <div class="section">
+          <div class="section-header">
+            <h3>Responsáveis</h3>
+            <button mat-raised-button color="primary" type="button" (click)="addGuardian()">
+              <mat-icon>person_add</mat-icon>
+              Adicionar Responsável
+            </button>
+          </div>
+
+          <div formArrayName="guardians">
+            <div *ngFor="let responsavel of getGuardians(); let i = index" [formGroupName]="i" class="responsavel-container">
+              <div class="responsavel-header">
+                <h4>Responsável {{i + 1}}</h4>
+                <button mat-icon-button color="warn" type="button" (click)="removeGuardian(i)" title="Remover responsável">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+              <div class="row">
+                <mat-form-field class="col">
+                  <mat-label>Nome</mat-label>
+                  <input matInput formControlName="name" placeholder="Nome do responsável">
+                  <mat-error>Campo obrigatório</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col">
+                  <mat-label>Parentesco</mat-label>
+                  <input matInput formControlName="relationship" placeholder="Ex: Pai, Mãe, Tio(a)">
+                </mat-form-field>
+              </div>
+
+              <div class="row">
+                <mat-form-field class="col">
+                  <mat-label>CPF</mat-label>
+                  <input matInput formControlName="cpf" placeholder="CPF do responsável">
+                  <mat-error>CPF inválido</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col">
+                  <mat-label>Telefone</mat-label>
+                  <input matInput formControlName="phoneNumber" placeholder="Telefone do responsável">
+                  <mat-error>Campo obrigatório</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Informações Médicas -->
+        <div class="section">
+          <h3>Informações Médicas</h3>
+          
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Convênio</mat-label>
+              <mat-select formControlName="convenio">
+                <mat-option [value]="0">Particular</mat-option>
+                <mat-option *ngFor="let conv of healthPlans" [value]="conv.id">
+                  {{ conv.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>Número do Prontuário</mat-label>
+              <input matInput formControlName="numeroProntuario">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Altura (cm)</mat-label>
+              <input matInput type="number" formControlName="heightCm">
+            </mat-form-field>
+
+            <mat-form-field class="col">
+              <mat-label>Peso (kg)</mat-label>
+              <input matInput type="number" formControlName="weightKg">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Alergias</mat-label>
+              <textarea matInput formControlName="allergies" placeholder="Separe por vírgulas"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Histórico Médico</mat-label>
+              <textarea matInput formControlName="medicalHistory" placeholder="Separe por vírgulas"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field class="col">
+              <mat-label>Observações</mat-label>
+              <textarea matInput formControlName="observations"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-checkbox formControlName="ativo">Ativo</mat-checkbox>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button type="button" routerLink="/pacientes">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="onSubmit()">Salvar</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

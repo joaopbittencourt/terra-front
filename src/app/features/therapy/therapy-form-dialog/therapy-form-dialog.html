@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{data ? 'Editar' : 'Nova'}} Terapia</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field class="full-width">
+      <mat-label>Nome da Terapia</mat-label>
+      <input matInput formControlName="name" name="name" placeholder="Ex: Terapia Física">
+      <mat-error *ngIf="form.get('name')?.hasError('required')">
+        Campo obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="description" placeholder="Descrição da terapia"></textarea>
+    </mat-form-field>
+
+    <div class="checkbox-group">
+      <mat-checkbox formControlName="active">Ativo</mat-checkbox>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!form.valid">
+    Salvar
+  </button>
+</mat-dialog-actions>

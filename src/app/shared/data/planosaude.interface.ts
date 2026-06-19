@@ -1,8 +1,11 @@
-export type TipoPlano = 'Individual' | 'Familiar' | 'Empresarial' | 'Individual+Odonto';
-export type Acomodacao = 'Apartamento' | 'Enfermaria' | 'Ambos';
+export type PlanType = 'Individual' | 'Family' | 'Corporate' | 'Individual+Dental';
+export type Accommodation = 'Private' | 'Ward' | 'Both';
 
-export interface PlanoSaude {
+export interface HealthPlan {
     id: string;
-    nome: string;
-    operadora: string;
+    name: string;
+    signatureDate: string; // ISO date
+    expiryDate: string;   // ISO date
+    status: boolean;
+    registrationNumber: string;
 }

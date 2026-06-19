@@ -1,0 +1,132 @@
+<h2 mat-dialog-title>
+  {{ data?.mode === 'create' ? 'Novo Agendamento' : (data?.mode === 'edit' ? 'Editar Agendamento' : 'Registrar Sessão') }}
+</h2>
+
+<mat-dialog-content>
+  <div *ngIf="data?.mode === 'register'">
+    <div class="register-info">
+      <p><strong>Paciente:</strong> {{ displayPatientName }}</p>
+      <p><strong>Terapeuta:</strong> {{ displayTherapistName }}</p>
+      <p><strong>Terapia:</strong> {{ displayTherapyName }}</p>
+      <p><strong>Horário:</strong> {{ displaySessionLabel }}</p>
+    </div>
+    <form [formGroup]="form">
+      <mat-form-field class="full-width">
+        <mat-label>Data</mat-label>
+         <input matInput
+           [matDatepicker]="registerDatePicker"
+           [matDatepickerFilter]="allowedDatesFilter"
+           formControlName="date"
+           required>
+        <mat-datepicker-toggle matSuffix [for]="registerDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #registerDatePicker></mat-datepicker>
+        <mat-error *ngIf="form.get('date')?.hasError('required')">Data é obrigatória</mat-error>
+        <mat-error *ngIf="form.get('date')?.hasError('weekdayMismatch')">Data selecionada não corresponde ao dia da semana do horário escolhido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="full-width">
+        <mat-label>Prontuário da sessão</mat-label>
+        <textarea matInput rows="8" formControlName="description" placeholder="Digite aqui o prontuário da sessão..."></textarea>
+        <mat-error *ngIf="form.get('description')?.hasError('required')">Descrição é obrigatória</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div *ngIf="data?.mode !== 'register'">
+  <form [formGroup]="form">
+    <!-- Date -->
+    <mat-form-field class="full-width">
+      <mat-label>Data</mat-label>
+            <input matInput
+              [matDatepicker]="datePicker"
+              [matDatepickerFilter]="allowedDatesFilter"
+              formControlName="date"
+              required>
+      <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+      <mat-error *ngIf="form.get('date')?.hasError('required')">
+        Data é obrigatória
+      </mat-error>
+      <mat-error *ngIf="form.get('date')?.hasError('weekdayMismatch')">Data selecionada não corresponde ao dia da semana do horário escolhido</mat-error>
+    </mat-form-field>
+
+    <!-- Session ID (Time Slot) -->
+    <mat-form-field class="full-width">
+      <mat-label>Horário</mat-label>
+      <mat-select formControlName="sessionId" required>
+        <mat-option *ngFor="let option of sessionIdOptions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('sessionId')?.hasError('required')">
+        Horário é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Contract -->
+    <mat-form-field class="full-width">
+      <mat-label>Contrato</mat-label>
+      <mat-select formControlName="contract" required>
+        <mat-option value="">Selecione...</mat-option>
+        <!-- Add contract options from service -->
+      </mat-select>
+      <mat-error *ngIf="form.get('contract')?.hasError('required')">
+        Contrato é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Patient -->
+    <mat-form-field class="full-width">
+      <mat-label>Paciente</mat-label>
+      <mat-select formControlName="patient" required>
+        <mat-option value="">Selecione...</mat-option>
+        <!-- Add patient options from service -->
+      </mat-select>
+      <mat-error *ngIf="form.get('patient')?.hasError('required')">
+        Paciente é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Team/Therapist -->
+    <mat-form-field class="full-width">
+      <mat-label>Terapeuta</mat-label>
+      <mat-select formControlName="team" required>
+        <mat-option value="">Selecione...</mat-option>
+        <!-- Add therapist options from service -->
+      </mat-select>
+      <mat-error *ngIf="form.get('team')?.hasError('required')">
+        Terapeuta é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Discipline -->
+    <mat-form-field class="full-width">
+      <mat-label>Disciplina/Modalidade</mat-label>
+      <mat-select formControlName="discipline" required>
+        <mat-option value="">Selecione...</mat-option>
+        <!-- Add discipline options from service -->
+      </mat-select>
+      <mat-error *ngIf="form.get('discipline')?.hasError('required')">
+        Disciplina é obrigatória
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Status -->
+    <div class="status-toggle">
+      <mat-slide-toggle formControlName="status">
+        {{ form.get('status')?.value ? 'Ativo' : 'Cancelado' }}
+      </mat-slide-toggle>
+    </div>
+  </form>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isSubmitting">
+    Cancelar
+  </button>
+  <button mat-raised-button color="primary" (click)="onSubmit()"
+          [disabled]="form.invalid || isSubmitting">
+    {{ isSubmitting ? (data?.mode === 'register' ? 'Enviando...' : 'Salvando...') : (data?.mode === 'register' ? 'Enviar' : 'Salvar') }}
+  </button>
+</mat-dialog-actions>

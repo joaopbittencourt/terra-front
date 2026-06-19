@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Editar Plano de Saúde' : 'Adicionar Plano de Saúde' }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="plano-form">
+    <mat-form-field appearance="fill">
+      <mat-label>Nome do Plano</mat-label>
+      <input matInput formControlName="name" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Data de Assinatura</mat-label>
+      <input matInput type="date" formControlName="effetiveDate" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Data de Validade</mat-label>
+      <input matInput type="date" formControlName="dateOfValidity" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let option of statusOptions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Número de Registro</mat-label>
+      <input matInput formControlName="registrationNumber" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Código do Operador</mat-label>
+      <input matInput formControlName="operatorCod" required />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Product Code</mat-label>
+      <input matInput formControlName="productCod" required />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="submit()" [disabled]="form.invalid">
+    {{ isEdit ? 'Atualizar' : 'Adicionar' }}
+  </button>
+</mat-dialog-actions>

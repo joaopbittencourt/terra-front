@@ -1,0 +1,10 @@
+{
+    "contract":"3dea3dc2-6b69-4b77-9511-8ef26ac9e844",
+    "dataTherapyPatienteDTOList":[
+        {
+            "therapy":"36c31eab-04f0-40d3-95da-4add11c8b7f9",
+            "therapist":"f7985aa9-8704-4c04-a66c-6313b40dfe74",
+            "sessionList":["SEG_0830","SEG_0900"]
+        }
+    ]
+}

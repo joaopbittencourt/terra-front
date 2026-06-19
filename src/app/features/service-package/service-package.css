@@ -1,0 +1,77 @@
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-field {
+  flex: 1;
+}
+
+button mat-icon {
+  margin-right: 8px;
+}
+
+.table-container {
+  position: relative;
+  min-height: 200px;
+  max-height: calc(100vh - 250px);
+  overflow: auto;
+  border-radius: 4px;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.mat-column-actions {
+  width: 120px;
+  text-align: center;
+}
+
+.mat-column-active {
+  width: 120px;
+  text-align: center;
+}
+
+.mat-column-price {
+  width: 120px;
+  text-align: right;
+}
+
+.mat-column-qtdSessions {
+  width: 100px;
+  text-align: center;
+}
+
+.active-icon {
+  color: #4CAF50;
+  margin-right: 4px;
+}
+
+.inactive-icon {
+  color: #F44336;
+  margin-right: 4px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+  .header-actions {
+    flex-direction: column;
+  }
+
+  .filter-field {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+}

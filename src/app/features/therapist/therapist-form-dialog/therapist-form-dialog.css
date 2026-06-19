@@ -1,0 +1,75 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.col {
+  flex: 1;
+}
+
+.checkbox-group {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.terapias-section {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.terapias-section h3 {
+  margin: 0 0 0.5rem 0;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 1rem;
+}
+
+.terapias-info {
+  margin: 0 0 1rem 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.875rem;
+}
+
+.terapias-container {
+  background-color: rgba(0, 0, 0, 0.02);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.selectable-chip {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.selectable-chip:hover {
+  background-color: rgba(25, 118, 210, 0.1);
+}
+
+.terapias-selecionadas {
+  margin-top: 1rem;
+}
+
+.terapias-selecionadas h4 {
+  margin: 0 0 0.5rem 0;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 0.9rem;
+}
+
+.terapias-error {
+  color: #f44336;
+  font-size: 0.75rem;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+mat-dialog-actions {
+  padding: 16px 0;
+  gap: 8px;
+}

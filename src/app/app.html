@@ -1,4 +1,5 @@
-<mat-toolbar color="primary" class="mat-elevation-z6">
+<ng-container *ngIf="isLoggedIn(); else publicContent">
+  <mat-toolbar>
   <button mat-icon-button (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
@@ -17,9 +18,25 @@
       <mat-icon>category</mat-icon>
       Modalidades
     </a>
+    <a mat-button routerLink="/terapia" routerLinkActive="active-link">
+      <mat-icon>healing</mat-icon>
+      Terapias
+    </a>
+    <a mat-button routerLink="/terapeuta" routerLinkActive="active-link">
+      <mat-icon>person</mat-icon>
+      Terapeutas
+    </a>
     <a mat-button routerLink="/planosaude" routerLinkActive="active-link">
       <mat-icon>local_hospital</mat-icon>
       Planos de Saúde
+    </a>
+    <a mat-button routerLink="/service-package" routerLinkActive="active-link">
+      <mat-icon>all_inclusive</mat-icon>
+      Pacotes de Serviço
+    </a>
+    <a mat-button routerLink="/calendar-schedule" routerLinkActive="active-link">
+      <mat-icon>calendar_month</mat-icon>
+      Agendamentos
     </a>
     <a mat-button routerLink="/weekly-calendar" routerLinkActive="active-link">
       <mat-icon>calendar_today</mat-icon>
@@ -30,9 +47,14 @@
       Agenda
     </a>
   </nav>
-</mat-toolbar>
+  
+  <button mat-button (click)="logout()" style="margin-left: 12px">
+    <span style="margin-right:8px">{{ getUserName() }}</span>
+    <mat-icon>logout</mat-icon>
+  </button>
+  </mat-toolbar>
 
-<mat-sidenav-container style="height: calc(100vh - 64px)">
+  <mat-sidenav-container style="height: calc(100vh - 64px)">
   <mat-sidenav #sidenav mode="side" class="mat-elevation-z4" style="width: 250px">
     <mat-nav-list>
       <a mat-list-item routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
@@ -47,9 +69,25 @@
         <mat-icon matListItemIcon>category</mat-icon>
         <span matListItemTitle>Modalidades</span>
       </a>
+      <a mat-list-item routerLink="/terapia" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>healing</mat-icon>
+        <span matListItemTitle>Terapias</span>
+      </a>
+      <a mat-list-item routerLink="/terapeuta" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span matListItemTitle>Terapeutas</span>
+      </a>
       <a mat-list-item routerLink="/planosaude" routerLinkActive="active-link">
         <mat-icon matListItemIcon>local_hospital</mat-icon>
         <span matListItemTitle>Planos de Saúde</span>
+      </a>
+      <a mat-list-item routerLink="/service-package" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>all_inclusive</mat-icon>
+        <span matListItemTitle>Pacotes de Serviço</span>
+      </a>
+      <a mat-list-item routerLink="/calendar-schedule" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>calendar_month</mat-icon>
+        <span matListItemTitle>Agendamentos</span>
       </a>
       <a mat-list-item routerLink="/weekly-calendar" routerLinkActive="active-link">
         <mat-icon matListItemIcon>calendar_today</mat-icon>
@@ -68,4 +106,9 @@
   <mat-sidenav-content style="padding: 20px">
     <router-outlet/>
   </mat-sidenav-content>
-</mat-sidenav-container>
+  </mat-sidenav-container>
+</ng-container>
+
+<ng-template #publicContent>
+  <router-outlet></router-outlet>
+</ng-template>
