@@ -109,6 +109,7 @@
     </div>
 
     <div class="week-grid" *ngIf="filteredSchedules$ | async as schedules">
+      
       <div class="time-slots-column">
         <div class="time-slot" *ngFor="let slot of timeSlots">
           {{ slot }}
@@ -117,14 +118,14 @@
 
       <div class="day-column" *ngFor="let day of weekDays">
         <div class="slot-container" *ngFor="let slot of timeSlots">
-          <div class="schedule-cards">
+          <div class="schedule-cards"> 
             <mat-card
               *ngFor="let schedule of getTimeSlotSchedulesByEnum(day.date, slot, schedules)"
               class="schedule-card"
               [class.cancelled]="!schedule.status"
               (click)="openRegisterDialog(schedule)">
               <mat-card-header>
-                <div class="card-patient">{{ schedule.contract.patient.firstName }} {{ schedule.contract.patient.lastName }} | {{ schedule.therapy.name }} | {{ schedule.therapist.name }} </div>
+                <div class="card-patient">Paciente: {{ schedule.contract.patient.firstName }} {{ schedule.contract.patient.lastName }} | Terapia: {{ schedule.therapy.name }} | Terapeuta: {{ schedule.therapist.name }} </div>
                 <div class="card-status" [class.inactive]="!schedule.status">
                   {{ schedule.status ? 'Ativo' : 'Cancelado' }}
                 </div>
@@ -147,39 +148,42 @@
   <!-- Day view -->
   <div *ngIf="(viewMode$ | async) === 'day'" class="day-view">
     <div class="day-grid" *ngIf="(filteredSchedules$ | async) as schedules">
+      <!--
       <div class="time-slots-column">
         <div class="time-slot" *ngFor="let slot of timeSlots">
           {{ slot }}
         </div>
       </div>
-
+-->
       <div class="day-column">
         <div class="day-header">
           <div class="day-name">{{ (selectedDate$ | async) | date: 'EEEE' }}</div>
           <div class="day-number">{{ (selectedDate$ | async) | date: 'dd/MM' }}</div>
         </div>
-
-        <div class="slot-container" *ngFor="let slot of timeSlots">
-          <div class="schedule-cards">
-            <mat-card *ngFor="let schedule of getTimeSlotSchedulesByEnum((selectedDate$ | async), slot, schedules)"
-                      class="schedule-card"
-                      [class.cancelled]="!schedule.status"
-                      (click)="openRegisterDialog(schedule)">
-              <mat-card-header>
-                <div class="card-patient">{{ schedule.contract.patient.firstName }} {{ schedule.contract.patient.lastName }} | {{ schedule.therapy.name }} | {{ schedule.therapist.name }} </div>
-                <div class="card-status" [class.inactive]="!schedule.status">
-                  {{ schedule.status ? 'Ativo' : 'Cancelado' }}
-                </div>
-                <div>
-                  <button mat-icon-button (click)="$event.stopPropagation(); openEditDialog(schedule)">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button mat-icon-button (click)="$event.stopPropagation(); deleteSchedule(schedule)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </mat-card-header>
-            </mat-card>
+        <div class="time-slots-column-day">
+          <div class="slot-container-day" *ngFor="let slot of timeSlots">
+            <b>{{ slot }}</b>
+            <div class="schedule-cards">
+              <mat-card class="time-slot-day" *ngFor="let schedule of getTimeSlotSchedulesByEnum((selectedDate$ | async), slot, schedules)"
+                        class="schedule-card"
+                        [class.cancelled]="!schedule.status"
+                        (click)="openRegisterDialog(schedule)">
+                <mat-card-header>
+                  <div class="card-patient">Paciente: {{ schedule.contract.patient.firstName }} {{ schedule.contract.patient.lastName }} | Terapia: {{ schedule.therapy.name }} | Terapeuta: {{ schedule.therapist.name }} </div>
+                  <div class="card-status" [class.inactive]="!schedule.status">
+                    {{ schedule.status ? 'Ativo' : 'Cancelado' }}
+                  </div>
+                  <div>
+                    <button mat-icon-button (click)="$event.stopPropagation(); openEditDialog(schedule)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="$event.stopPropagation(); deleteSchedule(schedule)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </mat-card-header>
+              </mat-card>
+            </div>
           </div>
         </div>
       </div>

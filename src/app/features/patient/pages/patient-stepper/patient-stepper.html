@@ -35,7 +35,7 @@
         <div *ngFor="let _ctrl of guardians.controls; let i = index" [formGroupName]="i" class="responsible-block">
           <mat-form-field appearance="outline" class="half-width">
             <mat-label>CPF do responsável</mat-label>
-            <input matInput formControlName="cpf" (input)="formatCpfInputGuardian(i, $event)" (blur)="checkGuardianByCpf(i)" maxlength="14" />
+            <input matInput formControlName="cpf" (loadeddata)="formatCpfInput($event)" (input)="formatCpfInputGuardian(i, $event)" (blur)="checkGuardianByCpf(i)" maxlength="14" />
             <mat-error *ngIf="guardians.controls[i].get('cpf')?.hasError('required')">CPF é obrigatório</mat-error>
             <mat-error *ngIf="guardians.controls[i].get('cpf')?.hasError('invalidCpf')">CPF inválido</mat-error>
           </mat-form-field>

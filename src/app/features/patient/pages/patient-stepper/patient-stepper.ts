@@ -437,6 +437,8 @@ export class PatientStepperComponent implements OnInit {
 
   formatCpfInputGuardian(index: number, event: Event) {
     const input = event.target as HTMLInputElement;
+    if(input.value.length < 11)
+      return;
     const onlyDigits = input.value.replace(/\D/g, '').slice(0,11);
     const formatted = this.formatCpf(onlyDigits);
     const control = this.guardians.at(index);
