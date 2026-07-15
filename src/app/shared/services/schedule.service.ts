@@ -278,6 +278,6 @@ export class ScheduleService {
    * Refresh schedules from API
    */
   refresh(): void {
-    this.loadAllSchedules();
+    this.loadActiveSchedules();
   }
 }
