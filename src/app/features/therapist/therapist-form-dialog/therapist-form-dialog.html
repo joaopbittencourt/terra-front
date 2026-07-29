@@ -38,6 +38,31 @@
       <input matInput formControlName="phoneNumber" placeholder="Ex: (11) 99999-9999">
     </mat-form-field>
 
+    <mat-form-field class="full-width">
+      <mat-label>Tipo de contrato</mat-label>
+      <mat-select formControlName="contractType">
+        <mat-option value="percentage">Por porcentagem</mat-option>
+        <mat-option value="fixed">Fixo</mat-option>
+      </mat-select>
+      <mat-error>{{getErrorMessage('contractType')}}</mat-error>
+    </mat-form-field>
+
+    <div *ngIf="form.get('contractType')?.value === 'percentage'">
+      <mat-form-field class="full-width">
+        <mat-label>Porcentagem</mat-label>
+        <input matInput type="text" formControlName="percentage" inputmode="decimal" min="0" placeholder="Ex: 20,00" (input)="applyPercentageMask($event)">
+        <mat-error>{{getErrorMessage('percentage')}}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="form.get('contractType')?.value === 'fixed'">
+      <mat-form-field class="full-width">
+        <mat-label>Remuneração</mat-label>
+        <input matInput type="text" formControlName="remuneration" inputmode="decimal" min="0" placeholder="Ex: 5.000,00" (input)="applyCurrencyMask($event)">
+        <mat-error>{{getErrorMessage('remuneration')}}</mat-error>
+      </mat-form-field>
+    </div>
+
     <div class="checkbox-group">
       <mat-checkbox formControlName="active">Ativo</mat-checkbox>
     </div>

@@ -16,6 +16,7 @@ import { TherapistService } from '../../../shared/services/therapist.service';
 import { TherapyService } from '../../../shared/services/therapy.service';
 import { NotificationService } from '../../../services/notification/notification';
 import { SessionIdEnum } from '../../../shared/data/session-id.enum';
+import { isEmpty } from 'rxjs';
 interface DialogData {
   therapist: Therapist | null;
   availableTherapies: Array<Therapy>;
@@ -63,10 +64,19 @@ export class TherapistFormDialogComponent implements OnInit {
       cpf: ['', [Validators.required, Validators.pattern(/^\d{11}$/)]],
       phoneNumber: [''],
       professionalRegistration: ['', [Validators.required]],
+      contractType: [this.getContractTypeValue('percentage'), [Validators.required]],
+      percentage: [null],
+      remuneration: [null],
       active: [true],
       therapies: [[]],
       sessionsId: [[]]
     });
+
+    this.form.get('contractType')?.valueChanges.subscribe((value) => {
+      this.updateContractFieldsValidators(value);
+    });
+
+    this.updateContractFieldsValidators(this.form.get('contractType')?.value);
   }
 
   private notification = inject(NotificationService);
@@ -88,9 +98,14 @@ export class TherapistFormDialogComponent implements OnInit {
           cpf: therapist.cpf,
           phoneNumber: therapist.phoneNumber || therapist.telefone,
           professionalRegistration: therapist.professionalRegistration || therapist.registroOrgao,
+          contractType: this.getContractTypeValue(therapist.contractType),
+          percentage: this.formatPercentageValue(therapist.percentage),
+          remuneration: this.formatCurrencyValue(therapist.remuneration),
           active: therapist.active !== undefined ? therapist.active : therapist.ativo,
           sessionsId: therapist.sessionsId || []
         });
+
+        this.updateContractFieldsValidators(this.form.get('contractType')?.value);
 
         if (therapist.therapies || therapist.terapias) {
           this.selectedTherapies = [...(therapist.therapies || therapist.terapias)];
@@ -102,6 +117,87 @@ export class TherapistFormDialogComponent implements OnInit {
         }
       }
     }
+  }
+
+  updateContractFieldsValidators(contractType: string | null): void {
+    const percentageControl = this.form.get('percentage');
+    const remunerationControl = this.form.get('remuneration');
+    const resolvedContractType = this.getContractTypeValue(contractType);
+
+    percentageControl?.clearValidators();
+    remunerationControl?.clearValidators();
+
+    if (resolvedContractType === 'percentage') {
+      remunerationControl?.setValue('');
+    } else {
+      percentageControl?.setValue('');
+    }
+
+    percentageControl?.updateValueAndValidity();
+    remunerationControl?.updateValueAndValidity();
+  }
+
+  private getContractTypeValue(value: string | null | undefined): 'percentage' | 'fixed' {
+    return value === 'fixed' ? 'fixed' : 'percentage';
+  }
+
+  formatPercentageValue(value: number | string | null | undefined): string {
+    if (value === null || value === undefined || value === '') {
+      return '';
+    }
+
+    return Number(value).toFixed(2).replace('.', ',');
+  }
+
+  formatCurrencyValue(value: number | string | null | undefined): string {
+    if (value === null || value === undefined || value === '') {
+      return '';
+    }
+
+    const numericValue = typeof value === 'number' ? value : Number(value);
+
+    if (Number.isNaN(numericValue)) {
+      return '';
+    }
+
+    return new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(numericValue);
+  }
+
+  applyPercentageMask(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.replace(/[^\d,]/g, '');
+    const normalized = value.replace(/\./g, '').replace(',', '.');
+    const numericValue = normalized === '' ? '' : parseFloat(normalized);
+
+    if (numericValue === '' || Number.isNaN(numericValue)) {
+      input.value = '';
+      this.form.get('percentage')?.setValue('', { emitEvent: false });
+      return;
+    }
+
+    const formattedValue = numericValue.toFixed(2).replace('.', ',');
+    input.value = formattedValue;
+    this.form.get('percentage')?.setValue(formattedValue, { emitEvent: false });
+  }
+
+  applyCurrencyMask(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.replace(/[^\d,]/g, '');
+    const parts = value.split(',');
+    const integerPart = (parts[0] || '').replace(/\D/g, '');
+    const decimalPart = parts[1] || '';
+    const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    let formattedValue = formattedIntegerPart;
+
+    if (decimalPart) {
+      formattedValue += `,${decimalPart.slice(0, 2)}`;
+    }
+
+    input.value = formattedValue;
+    this.form.get('remuneration')?.setValue(formattedValue, { emitEvent: false });
   }
 
   getAllSessions(): void {
@@ -142,7 +238,7 @@ export class TherapistFormDialogComponent implements OnInit {
   }
 
   isTherapySelected(therapy: Therapy): boolean {
-    return this.selectedTherapies.includes(therapy);
+    return !!this.selectedTherapies.find((t: Therapy) => t.name === therapy.name);
   }
   getAllTherapies(): any {
     this.therapyService.getAll().subscribe({
@@ -158,8 +254,22 @@ export class TherapistFormDialogComponent implements OnInit {
   onSave(): void {
     if (this.form.valid && this.selectedTherapies.length > 0) {
       const formValue = this.form.value;
+      formValue.contractType = this.getContractTypeValue(this.form.get('contractType')?.value);
       formValue.therapies = this.selectedTherapies;
       formValue.sessionsId = this.selectedSessions;
+
+      if (formValue.contractType === 'percentage') {
+        formValue.remuneration = null;
+        formValue.percentage = formValue.percentage !== '' && formValue.percentage !== null
+          ? Number(String(formValue.percentage).replace(/\./g, '').replace(',', '.'))
+          : null;
+      } else {
+        formValue.percentage = null;
+        formValue.remuneration = formValue.remuneration !== '' && formValue.remuneration !== null
+          ? Number(String(formValue.remuneration).replace(/\./g, '').replace(',', '.'))
+          : null;
+      }
+
       this.dialogRef.close(formValue);
     }
   }
