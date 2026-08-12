@@ -169,8 +169,8 @@ export class TherapistFormDialogComponent implements OnInit {
   applyPercentageMask(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value.replace(/[^\d,]/g, '');
-    const normalized = value.replace(/\./g, '').replace(',', '.');
-    const numericValue = normalized === '' ? '' : parseFloat(normalized);
+    //const normalized = value.replace(/\./g, '').replace(',', '');
+    const numericValue = value === '' ? '' : parseInt(value);
 
     if (numericValue === '' || Number.isNaN(numericValue)) {
       input.value = '';
@@ -178,26 +178,32 @@ export class TherapistFormDialogComponent implements OnInit {
       return;
     }
 
-    const formattedValue = numericValue.toFixed(2).replace('.', ',');
-    input.value = formattedValue;
-    this.form.get('percentage')?.setValue(formattedValue, { emitEvent: false });
+    if (numericValue > 100) {
+      input.value = '100';
+      this.form.get('percentage')?.setValue(100, { emitEvent: false });
+      return;
+    }
+
+    input.value = numericValue.toString();
+    this.form.get('percentage')?.setValue(numericValue, { emitEvent: false });
   }
 
   applyCurrencyMask(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const value = input.value.replace(/[^\d,]/g, '');
-    const parts = value.split(',');
-    const integerPart = (parts[0] || '').replace(/\D/g, '');
-    const decimalPart = parts[1] || '';
-    const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    let formattedValue = formattedIntegerPart;
 
-    if (decimalPart) {
-      formattedValue += `,${decimalPart.slice(0, 2)}`;
+    const value = input.value.replace(/\D/g, '');
+
+    if (!value) {
+      input.value = '';
+      return;
     }
 
-    input.value = formattedValue;
-    this.form.get('remuneration')?.setValue(formattedValue, { emitEvent: false });
+    const currencyValue = Number(value) / 100;
+
+    input.value = currencyValue.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
   }
 
   getAllSessions(): void {
@@ -257,19 +263,19 @@ export class TherapistFormDialogComponent implements OnInit {
       formValue.contractType = this.getContractTypeValue(this.form.get('contractType')?.value);
       formValue.therapies = this.selectedTherapies;
       formValue.sessionsId = this.selectedSessions;
-
+      
       if (formValue.contractType === 'percentage') {
+        console.log()
         formValue.remuneration = null;
         formValue.percentage = formValue.percentage !== '' && formValue.percentage !== null
           ? Number(String(formValue.percentage).replace(/\./g, '').replace(',', '.'))
           : null;
       } else {
         formValue.percentage = null;
-        formValue.remuneration = formValue.remuneration !== '' && formValue.remuneration !== null
-          ? Number(String(formValue.remuneration).replace(/\./g, '').replace(',', '.'))
+        formValue.remuneration = formValue.remuneration !== '' && formValue.remuneration !== null 
+          ? (Number(formValue.remuneration.replace(',', '').replace('R$ ', '').replace(/\./g, '')) / 100).toFixed(2)
           : null;
       }
-
       this.dialogRef.close(formValue);
     }
   }

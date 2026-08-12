@@ -50,7 +50,7 @@
     <div *ngIf="form.get('contractType')?.value === 'percentage'">
       <mat-form-field class="full-width">
         <mat-label>Porcentagem</mat-label>
-        <input matInput type="text" formControlName="percentage" inputmode="decimal" min="0" placeholder="Ex: 20,00" (input)="applyPercentageMask($event)">
+        <input matInput type="text" formControlName="percentage" inputmode="numeric" min="0" placeholder="Ex: 20,00" (input)="applyPercentageMask($event)">
         <mat-error>{{getErrorMessage('percentage')}}</mat-error>
       </mat-form-field>
     </div>
