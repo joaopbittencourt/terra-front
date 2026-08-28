@@ -36,3 +36,41 @@ app-root {
   background-color: transparent !important; /* Deixa o fundo transparente para usar a cor personalizada */
 } 
 
+/* Padroniza o conteúdo das páginas para 80% da largura e centraliza */
+/* Para o layout com sidenav */
+.mat-sidenav-content {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.mat-sidenav-content > * {
+  width: 80%;
+  max-width: 80%;
+  box-sizing: border-box;
+}
+
+/* Para páginas públicas (quando não há mat-sidenav-container) */
+app-root > *:not(mat-sidenav-container) {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+app-root > *:not(mat-sidenav-container) > * {
+  width: 80%;
+  max-width: 80%;
+  box-sizing: border-box;
+}
+
+/* Reusable page container to apply patient page pattern uniformly */
+.page-container {
+  width: 80%;
+  max-width: 80%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0 12px;
+}
+
+.page-container .full-width-table {
+  width: 100%;
+}
+

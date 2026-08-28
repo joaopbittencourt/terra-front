@@ -152,7 +152,8 @@ export class PatientStepperComponent implements OnInit {
     this.loadTherapiesAndTherapists();
     this.loadModalitiyList();
 
-    this.loadInfoPatient(); 
+    if(!!this.patientId)
+      this.loadInfoPatient(); 
     
     
     // adjust validators when switching between health plan / particular

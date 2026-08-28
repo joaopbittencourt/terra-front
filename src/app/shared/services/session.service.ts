@@ -25,7 +25,7 @@ export class SessionService {
   error$ = this.errorSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    this.loadAllSessions();
+    //this.loadAllSessions();
   }
 
   private loadAllSessions(): void {

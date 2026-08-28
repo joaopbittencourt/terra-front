@@ -1,40 +1,43 @@
 
 
-<button mat-raised-button color="primary" (click)="addPlan()">Adicionar Plano de Saúde</button>
+<div class="page-container">
 
-<h2>Planos de Saúde Cadastrados</h2>
-<table mat-table [dataSource]="plans" class="mat-elevation-z8" *ngIf="plans.length">
-	<ng-container matColumnDef="name">
-		<th mat-header-cell *matHeaderCellDef>Nome</th>
-		<td mat-cell *matCellDef="let plano">{{ plano.name }}</td>
-	</ng-container>
-	<ng-container matColumnDef="effetiveDate">
-		<th mat-header-cell *matHeaderCellDef>Assinatura</th>
-		<td mat-cell *matCellDef="let plano">{{ plano.effetiveDate | date:'shortDate' }}</td>
-	</ng-container>
-	<ng-container matColumnDef="dateOfValidity">
-		<th mat-header-cell *matHeaderCellDef>Validade</th>
-		<td mat-cell *matCellDef="let plano">{{ plano.dateOfValidity | date:'shortDate' }}</td>
-	</ng-container>
-	<ng-container matColumnDef="status">
-		<th mat-header-cell *matHeaderCellDef>Status</th>
-		<td mat-cell *matCellDef="let plano">{{ plano.status ? 'Ativo' : 'Inativo' }}</td>
-	</ng-container>
-	<ng-container matColumnDef="registrationNumber">
-		<th mat-header-cell *matHeaderCellDef>Nº Registro</th>
-		<td mat-cell *matCellDef="let plano">{{ plano.registrationNumber }}</td>
-	</ng-container>
-	<ng-container matColumnDef="actions">
-		<th mat-header-cell *matHeaderCellDef>Ações</th>
-		<td mat-cell *matCellDef="let plano">
-			<button mat-icon-button (click)="editPlan(plano)" title="Editar">
-				<mat-icon>edit</mat-icon>
-			</button>
-			<button mat-icon-button (click)="deletePlan(plano.id)" title="Excluir">
-				<mat-icon>delete</mat-icon>
-			</button>
-		</td>
-	</ng-container>
-	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+	<button mat-raised-button color="primary" (click)="addPlan()">Adicionar Plano de Saúde</button>
+
+	<h2>Planos de Saúde Cadastrados</h2>
+	<table mat-table [dataSource]="plans" class="mat-elevation-z8" *ngIf="plans.length">
+		<ng-container matColumnDef="name">
+			<th mat-header-cell *matHeaderCellDef>Nome</th>
+			<td mat-cell *matCellDef="let plano">{{ plano.name }}</td>
+		</ng-container>
+		<ng-container matColumnDef="effetiveDate">
+			<th mat-header-cell *matHeaderCellDef>Assinatura</th>
+			<td mat-cell *matCellDef="let plano">{{ plano.effetiveDate | date:'shortDate' }}</td>
+		</ng-container>
+		<ng-container matColumnDef="dateOfValidity">
+			<th mat-header-cell *matHeaderCellDef>Validade</th>
+			<td mat-cell *matCellDef="let plano">{{ plano.dateOfValidity | date:'shortDate' }}</td>
+		</ng-container>
+		<ng-container matColumnDef="status">
+			<th mat-header-cell *matHeaderCellDef>Status</th>
+			<td mat-cell *matCellDef="let plano">{{ plano.status ? 'Ativo' : 'Inativo' }}</td>
+		</ng-container>
+		<ng-container matColumnDef="registrationNumber">
+			<th mat-header-cell *matHeaderCellDef>Nº Registro</th>
+			<td mat-cell *matCellDef="let plano">{{ plano.registrationNumber }}</td>
+		</ng-container>
+		<ng-container matColumnDef="actions">
+			<th mat-header-cell *matHeaderCellDef>Ações</th>
+			<td mat-cell *matCellDef="let plano">
+				<button mat-icon-button (click)="editPlan(plano)" title="Editar">
+					<mat-icon>edit</mat-icon>
+				</button>
+				<button mat-icon-button (click)="deletePlan(plano.id)" title="Excluir">
+					<mat-icon>delete</mat-icon>
+				</button>
+			</td>
+		</ng-container>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	</table>
+</div>

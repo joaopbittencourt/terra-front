@@ -58,7 +58,7 @@ export class CalendarScheduleComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private notification = inject(NotificationService);
 
-  viewMode$ = new BehaviorSubject<'week' | 'month' | 'day'>('week');
+  viewMode$ = new BehaviorSubject<'week' | 'month' | 'day'>('day');
   selectedDate$ = new BehaviorSubject<Date>(new Date());
   showOnlyDay$ = new BehaviorSubject<boolean>(false);
 
@@ -142,17 +142,17 @@ export class CalendarScheduleComponent implements OnInit {
     this.updateWeekDays();
   }
 
-  previousMonth(): void {
+  previousDay(): void {
     const current = this.selectedDate$.value;
     const previous = new Date(current);
-    previous.setMonth(previous.getMonth() - 1);
+    previous.setDate(previous.getDate() - 1);
     this.selectedDate$.next(previous);
   }
 
-  nextMonth(): void {
+  nextDay(): void {
     const current = this.selectedDate$.value;
     const next = new Date(current);
-    next.setMonth(next.getMonth() + 1);
+    next.setDate(next.getDate() + 1);
     this.selectedDate$.next(next);
   }
 
@@ -168,7 +168,7 @@ export class CalendarScheduleComponent implements OnInit {
     if (mode === 'week') {
       this.previousWeek();
     } else {
-      this.previousMonth();
+      this.previousDay();
     }
   }
 
@@ -177,7 +177,7 @@ export class CalendarScheduleComponent implements OnInit {
     if (mode === 'week') {
       this.nextWeek();
     } else {
-      this.nextMonth();
+      this.nextDay();
     }
   }
 
@@ -228,8 +228,13 @@ export class CalendarScheduleComponent implements OnInit {
             this.scheduleService.refresh();
             this.notification.showSuccess('Agendamento excluído com sucesso');
           },
-          error: (err) => {
-            this.notification.showError('Erro ao excluir agendamento: ' + (err?.message || err));
+          error: (err) => { 
+            if (err?.status === 404) {
+              this.notification.showError('Serviço não implementado para exclusão de agendamento. Por favor, contate o suporte.');
+              //this.scheduleService.refresh();
+            } else {  
+              this.notification.showError('Erro ao excluir agendamento: ' + (err?.message || err));
+            }
           }
         });
       }

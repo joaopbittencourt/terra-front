@@ -1,4 +1,5 @@
-<div class="header-actions">
+<div class="page-container">
+  <div class="header-actions">
   <mat-form-field class="filter-field">
     <mat-label>Filtrar</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. João" #input>
@@ -79,9 +80,10 @@
   </table>
 
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecione a página de pacientes"></mat-paginator>
-</div>
+  </div>
 
-<!-- FAB Button to add new patient -->
-<button mat-fab color="primary" class="fab-button" routerLink="/patients/new" title="Adicionar novo paciente">
-  <mat-icon>add</mat-icon>
-</button>
+  <!-- FAB Button to add new patient -->
+  <button mat-fab color="primary" class="fab-button" routerLink="/patients/new" title="Adicionar novo paciente">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

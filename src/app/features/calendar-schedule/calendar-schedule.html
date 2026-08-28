@@ -1,4 +1,5 @@
-<div class="calendar-schedule-container">
+<div class="page-container">
+  <div class="calendar-schedule-container">
   <!-- Header -->
   <div class="schedule-header">
     <div class="header-title">
@@ -7,6 +8,10 @@
 
     <div class="header-controls">
       <!-- View buttons: Semanal / Mensal / Diário -->
+      <button mat-button (click)="setViewMode('day')" [color]="(viewMode$ | async) === 'day' ? 'accent' : null" class="view-toggle">
+        <mat-icon>today</mat-icon>
+        <span>Diário</span>
+      </button>
       <button mat-button (click)="setViewMode('week')" [color]="(viewMode$ | async) === 'week' ? 'accent' : null" class="view-toggle">
         <mat-icon>view_week</mat-icon>
         <span>Semanal</span>
@@ -14,10 +19,6 @@
       <button mat-button (click)="setViewMode('month')" [color]="(viewMode$ | async) === 'month' ? 'accent' : null" class="view-toggle">
         <mat-icon>calendar_view_month</mat-icon>
         <span>Mensal</span>
-      </button>
-      <button mat-button (click)="setViewMode('day')" [color]="(viewMode$ | async) === 'day' ? 'accent' : null" class="view-toggle">
-        <mat-icon>today</mat-icon>
-        <span>Diário</span>
       </button>
 
       <!-- Navigation -->
@@ -36,12 +37,6 @@
 
       <button mat-icon-button (click)="goToNextNavigation()">
         <mat-icon>chevron_right</mat-icon>
-      </button>
-
-      <!-- Create button -->
-      <button mat-raised-button color="primary" (click)="openCreateDialog()" class="create-btn">
-        <mat-icon>add</mat-icon>
-        <span>Novo Agendamento</span>
       </button>
       
       <!-- Show only selected day toggle -->
@@ -130,9 +125,6 @@
                   {{ schedule.status ? 'Ativo' : 'Cancelado' }}
                 </div>
                 <div>
-                  <button mat-icon-button (click)="$event.stopPropagation(); openEditDialog(schedule)">
-                    <mat-icon>edit</mat-icon>
-                  </button>
                   <button mat-icon-button (click)="$event.stopPropagation(); deleteSchedule(schedule)">
                     <mat-icon>delete</mat-icon>
                   </button>
@@ -157,8 +149,8 @@
 -->
       <div class="day-column">
         <div class="day-header">
-          <div class="day-name">{{ (selectedDate$ | async) | date: 'EEEE' }}</div>
-          <div class="day-number">{{ (selectedDate$ | async) | date: 'dd/MM' }}</div>
+          <div class="day-name">{{ (selectedDate$ | async) |  date: 'EEEE, d \'de\' MMMM \'de\' yyyy': '' : 'pt-BR'  }}</div>
+          
         </div>
         <div class="time-slots-column-day">
           <div class="slot-container-day" *ngFor="let slot of timeSlots">
@@ -173,11 +165,8 @@
                   <div class="card-status" [class.inactive]="!schedule.status">
                     {{ schedule.status ? 'Ativo' : 'Cancelado' }}
                   </div>
-                  <div>
-                    <button mat-icon-button (click)="$event.stopPropagation(); openEditDialog(schedule)">
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="$event.stopPropagation(); deleteSchedule(schedule)">
+                  <div class="day-view-card-actions">
+                    <button mat-icon-button (click)="$event.stopPropagation(); deleteSchedule(schedule)" disabled="disabled">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </div>
@@ -210,5 +199,6 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </div>

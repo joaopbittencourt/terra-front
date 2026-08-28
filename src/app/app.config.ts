@@ -3,6 +3,8 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient,withInterceptors } from '@angular/common/http';
+import localePt from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
 import {
   AutoRefreshTokenService,
   createInterceptorCondition,
@@ -21,6 +23,9 @@ const localhostCondition = createInterceptorCondition<IncludeBearerTokenConditio
    httpMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
    bearerPrefix: 'Bearer'
 });
+
+
+registerLocaleData(localePt);
 
 export const appConfig: ApplicationConfig = {
   providers: [

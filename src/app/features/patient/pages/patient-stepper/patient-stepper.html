@@ -1,4 +1,5 @@
-<mat-horizontal-stepper linear #stepper>
+<div class="page-container">
+  <mat-horizontal-stepper linear #stepper>
   <div class="overlay" *ngIf="sending">
     <mat-progress-spinner mode="indeterminate" diameter="60"></mat-progress-spinner>
   </div>
@@ -171,4 +172,5 @@
       <button mat-flat-button color="primary" (click)="cancel()">Concluir</button>
     </div>
   </mat-step>
-</mat-horizontal-stepper>
+  </mat-horizontal-stepper>
+</div>
