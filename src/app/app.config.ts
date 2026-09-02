@@ -14,6 +14,7 @@ import {
   provideKeycloak,
   UserActivityService,
 } from 'keycloak-angular';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 //import { debugBearerInterceptor } from './shared/interceptors/debug-bearer.interceptor';
 //import { forceTokenInterceptor } from './shared/interceptors/force-token.interceptor';
 
@@ -40,6 +41,10 @@ export const appConfig: ApplicationConfig = {
       provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
       useValue: [localhostCondition]
     },
+    { 
+      provide: MAT_DATE_LOCALE, 
+      useValue: 'pt-BR' 
+    },
     
     // Keycloak Configuration
     provideKeycloak({
@@ -61,5 +66,6 @@ export const appConfig: ApplicationConfig = {
     
     // Router
     provideRouter(routes)
+    
   ]
 };

@@ -182,13 +182,14 @@ export class PatientStepperComponent implements OnInit {
     this.contractService.getByPatient(this.patientId || '').subscribe({
       next: (data:Contract[]) => {
 
-        this.contract = data.filter((c: Contract) => c.status === true)[0];
+        //this.contract = data.filter((c: Contract) => c.status === true)[0];
+        this.contract = data[0];
         if(!this.contract) {
           this.notification.showError('Nenhum contrato ativo encontrado para este paciente.');
-          return;
+          //return;
         }
         this.contractId = this.contract.id.toString();
-        this.patient = this.contract.patient || this.patient;
+        this.patient =  this.contract.patient || this.patient;
         if (this.patient) {
           this.basicInfo.patchValue({
             firstName: this.patient.firstName || '',
@@ -225,12 +226,51 @@ export class PatientStepperComponent implements OnInit {
       error: (err) => {
         console.error('Error loading contract info', err);
         this.notification.showError('Erro ao carregar informações de contrato: ' + (err?.message || err));
+         this.loadPatient();
       },
       complete: () => { 
 
         if (this.contractId) {    
           this.loadSchedules(this.contractId);
+        }else{
+         
         }
+      }
+    });
+  }
+  loadPatient() {
+    this.patientService.getById(this.patientId || '').subscribe({
+      next: (data: Patient) => {
+        this.patient = data;  
+          if (this.patient) {
+          this.basicInfo.patchValue({
+            firstName: this.patient.firstName || '',
+            cpf: this.patient.document ? this.formatCpf(this.patient.document) : '',
+            phoneNumber: this.patient.phoneNumber ? this.formatTelephone(this.patient.phoneNumber) : '',
+            email: this.patient.email || ''
+          });
+          this.basicInfo.get('cpf')?.touched; // trigger validation
+          if (this.patient.guardians && this.patient.guardians.length > 0) {
+            this.guardians.clear();
+            this.patient.guardians.forEach((g: any) => {
+              const group = this.createGuardianGroup();
+              group.patchValue({
+                id: g.id || g._id || '',
+                cpf: g.cpf ? this.formatCpf(g.cpf.toString()) : '',
+                name: g.name || '',
+                phoneNumber: g.phoneNumber ? this.formatTelephone(g.phoneNumber) : '',
+                exists: true
+              });
+              group.get('name')?.disable({ emitEvent: false });
+              group.get('name')?.clearValidators();
+              this.guardians.push(group);   
+            });
+          }
+        }
+      },    
+      error: (err) => {
+        console.error('Error loading patient info', err);
+        this.notification.showError('Erro ao carregar informações do paciente: ' + (err?.message || err));
       }
     });
   }
@@ -635,11 +675,12 @@ export class PatientStepperComponent implements OnInit {
     }
 
     const values = this.agreementInfo.value;
+    console.log(values);
     const payload: any = {};
     if (values.hasHealthPlan) {
       payload.planCode = values.healthPlanId;
     } else {
-      payload.modality = values.modality;
+      payload.modality = values.modalityId;
     }
 
     if (!this.patientId) {

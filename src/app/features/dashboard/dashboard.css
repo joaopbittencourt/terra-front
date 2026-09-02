@@ -1,0 +1,51 @@
+.dashboard-cards {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+	align-items: stretch;
+}
+
+.dashboard-card {
+	flex: 1 1 220px;
+	min-width: 200px;
+	display: flex;
+	align-items: center;
+	padding: 12px;
+	cursor: pointer;
+	transition: transform 160ms ease, box-shadow 160ms ease;
+	box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+	border-radius: 8px;
+}
+
+.dashboard-card h2 {
+	font-size: 2.2rem;
+	margin: 0.5rem 0;
+}
+
+.card-link { text-decoration: none; color: inherit; display: block; flex: 1 1 220px; }
+
+.dashboard-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+
+.card-left { display:flex; align-items:center; justify-content:center; width:72px; height:72px; border-radius:8px; margin-right:12px; background: rgba(255,255,255,0.12); }
+.card-icon { font-size:36px; color: #fff; }
+
+.card-body { flex:1; text-align:left; }
+.card-title { font-weight:600; font-size:0.95rem; color: #fff; }
+.card-value { font-size:1.8rem; font-weight:700; margin-top:4px; color: #fff; }
+.card-sub { font-size:0.8rem; color:rgba(255,255,255,0.85); margin-top:6px; }
+
+/* Apply full-card background matching previous icon gradients */
+.card-schedule { background: linear-gradient(135deg,#42a5f5,#1e88e5); color:#fff; }
+.card-patients { background: linear-gradient(135deg,#66bb6a,#43a047); color:#fff; }
+.card-therapists { background: linear-gradient(135deg,#ffb74d,#fb8c00); color:#fff; }
+.card-plans { background: linear-gradient(135deg,#ab47bc,#8e24aa); color:#fff; }
+
+.card-schedule .card-left { background: rgba(255,255,255,0.12); }
+.card-patients .card-left { background: rgba(255,255,255,0.12); }
+.card-therapists .card-left { background: rgba(255,255,255,0.12); }
+.card-plans .card-left { background: rgba(255,255,255,0.12); }
+
+@media (max-width:720px) {
+	.dashboard-cards { flex-direction:column; }
+	.card-link { flex: 1 1 auto; }
+}

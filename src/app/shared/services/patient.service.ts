@@ -59,7 +59,7 @@ export class PatientService {
   /**
    * Get patient by ID
    */
-  getById(id: string): Observable<PatientModel | undefined> {
+  getById(id: string): Observable<PatientModel> {
     return this.http.get<PatientModel>(`${this.apiUrl}/${id}`)
       .pipe(
         catchError(error => {

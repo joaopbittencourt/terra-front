@@ -36,7 +36,7 @@ export class ModalityFormDialogComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       id: [null],
-      modality: ['', [Validators.required]],
+      name: ['', [Validators.required]],
       description: [''],
       status: [true]
     });

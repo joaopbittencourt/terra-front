@@ -1,0 +1,9 @@
+.active-icon {
+  color: #4CAF50;
+  margin-right: 4px;
+}
+
+.inactive-icon {
+  color: #F44336;
+  margin-right: 4px;
+}

@@ -108,6 +108,7 @@ export class CalendarScheduleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('CalendarScheduleComponent initialized');
     this.updateWeekDays();
   }
 
@@ -327,7 +328,7 @@ export class CalendarScheduleComponent implements OnInit {
   }
 
   private updateWeekDays(): void {
-    console.log(this.schedules$);
+
     const current = this.selectedDate$.value;
     const dayOfWeek = current.getDay();
     const diff = current.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Start from Monday

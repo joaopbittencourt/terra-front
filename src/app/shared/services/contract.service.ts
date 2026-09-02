@@ -60,6 +60,7 @@ export class ContractService {
    }
 
   setModality(id: string, modality: Partial<Modality>): Observable<Contract> {
+    console.log('setModality called with id:', id, 'and modality:', modality);
      this.loadingSubject.next(true);
      return this.http.post<Contract>(`${this.apiUrl}/register-modality/${id}`, modality)
        .pipe(

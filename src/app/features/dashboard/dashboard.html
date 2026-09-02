@@ -1,1 +1,54 @@
+<div class="dashboard-cards">
+	<a class="card-link" routerLink="/calendar-schedule" title="Ver agendamentos">
+		<mat-card class="dashboard-card card-schedule">
+			<div class="card-left">
+				<mat-icon class="card-icon">event_available</mat-icon>
+			</div>
+			<div class="card-body">
+				<div class="card-title">Terapias agendadas ativas</div>
+				<div class="card-value">{{ scheduledTherapiesCount }}</div>
+				<div class="card-sub">Agendamentos ativos</div>
+			</div>
+		</mat-card>
+	</a>
+
+	<a class="card-link" routerLink="/patient" title="Ver pacientes">
+		<mat-card class="dashboard-card card-patients">
+			<div class="card-left">
+				<mat-icon class="card-icon">person</mat-icon>
+			</div>
+			<div class="card-body">
+				<div class="card-title">Pacientes</div>
+				<div class="card-value">{{ patientsCount }}</div>
+				<div class="card-sub">Total de pacientes cadastrados</div>
+			</div>
+		</mat-card>
+	</a>
+
+	<a class="card-link" routerLink="/therapist" title="Ver terapeutas">
+		<mat-card class="dashboard-card card-therapists">
+			<div class="card-left">
+				<mat-icon class="card-icon">groups</mat-icon>
+			</div>
+			<div class="card-body">
+				<div class="card-title">Terapeutas</div>
+				<div class="card-value">{{ therapistsCount }}</div>
+				<div class="card-sub">Profissionais ativos</div>
+			</div>
+		</mat-card>
+	</a>
+
+	<a class="card-link" routerLink="/health-plans" title="Ver planos de saúde">
+		<mat-card class="dashboard-card card-plans">
+			<div class="card-left">
+				<mat-icon class="card-icon">local_hospital</mat-icon>
+			</div>
+			<div class="card-body">
+				<div class="card-title">Planos de Saúde</div>
+				<div class="card-value">{{ healthPlansCount }}</div>
+				<div class="card-sub">Operadoras cadastradas</div>
+			</div>
+		</mat-card>
+	</a>
+</div>
 

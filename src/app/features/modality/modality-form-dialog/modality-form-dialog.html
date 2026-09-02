@@ -4,8 +4,8 @@
   <form [formGroup]="form">
     <mat-form-field class="full-width">
       <mat-label>Modalidade</mat-label>
-      <input matInput formControlName="modality" placeholder="Ex: Fisioterapia">
-      <mat-error *ngIf="form.get('modality')?.hasError('required')">
+      <input matInput formControlName="name" placeholder="Ex: Interdisciplinar">
+      <mat-error *ngIf="form.get('name')?.hasError('required')">
         Campo obrigatório
       </mat-error>
     </mat-form-field>
