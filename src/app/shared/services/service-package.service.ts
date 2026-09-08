@@ -81,7 +81,16 @@ export class ServicePackageService {
       .pipe(
         tap(newServicePackage => {
           const currentServicePackages = this.servicePackagesCache$.value;
-          this.servicePackagesCache$.next([...currentServicePackages, newServicePackage]);
+          const nextServicePackages = [...currentServicePackages];
+          const index = nextServicePackages.findIndex(sp => String(sp.id) === String(newServicePackage.id));
+
+          if (index !== -1) {
+            nextServicePackages[index] = { ...nextServicePackages[index], ...newServicePackage };
+          } else {
+            nextServicePackages.push(newServicePackage);
+          }
+
+          this.servicePackagesCache$.next(nextServicePackages);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),
@@ -104,11 +113,16 @@ export class ServicePackageService {
       .pipe(
         tap(updatedServicePackage => {
           const currentServicePackages = this.servicePackagesCache$.value;
-          const index = currentServicePackages.findIndex(sp => sp.id === id);
+          const nextServicePackages = [...currentServicePackages];
+          const index = nextServicePackages.findIndex(sp => String(sp.id) === String(id || updatedServicePackage.id));
+
           if (index !== -1) {
-            currentServicePackages[index] = updatedServicePackage;
-            this.servicePackagesCache$.next([...currentServicePackages]);
+            nextServicePackages[index] = { ...nextServicePackages[index], ...updatedServicePackage };
+          } else {
+            nextServicePackages.push(updatedServicePackage);
           }
+
+          this.servicePackagesCache$.next(nextServicePackages);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),

@@ -89,7 +89,16 @@ export class SessionService {
       .pipe(
         tap(newSession => {
           const current = this.sessionsCache$.value;
-          this.sessionsCache$.next([...current, newSession]);
+          const next = [...current];
+          const index = next.findIndex(s => String(s.id) === String(newSession.id));
+
+          if (index !== -1) {
+            next[index] = { ...next[index], ...newSession };
+          } else {
+            next.push(newSession);
+          }
+
+          this.sessionsCache$.next(next);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),
@@ -109,11 +118,16 @@ export class SessionService {
       .pipe(
         tap(updated => {
           const current = this.sessionsCache$.value;
-          const idx = current.findIndex(s => s.id === id);
+          const next = [...current];
+          const idx = next.findIndex(s => String(s.id) === String(id || updated.id));
+
           if (idx > -1) {
-            current[idx] = updated;
-            this.sessionsCache$.next([...current]);
+            next[idx] = { ...next[idx], ...updated };
+          } else {
+            next.push(updated);
           }
+
+          this.sessionsCache$.next(next);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),

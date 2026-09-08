@@ -174,7 +174,16 @@ export class ScheduleService {
       .pipe(
         tap(newSchedule => {
           const currentSchedules = this.schedulesCache$.value;
-          this.schedulesCache$.next([...currentSchedules, newSchedule]);
+          const nextSchedules = [...currentSchedules];
+          const index = nextSchedules.findIndex(s => String(s.id) === String(newSchedule.id));
+
+          if (index !== -1) {
+            nextSchedules[index] = { ...nextSchedules[index], ...newSchedule };
+          } else {
+            nextSchedules.push(newSchedule);
+          }
+
+          this.schedulesCache$.next(nextSchedules);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),
@@ -233,11 +242,16 @@ export class ScheduleService {
       .pipe(
         tap(updatedSchedule => {
           const currentSchedules = this.schedulesCache$.value;
-          const index = currentSchedules.findIndex(s => s.id === id);
+          const nextSchedules = [...currentSchedules];
+          const index = nextSchedules.findIndex(s => String(s.id) === String(id || updatedSchedule.id));
+
           if (index > -1) {
-            currentSchedules[index] = updatedSchedule;
-            this.schedulesCache$.next([...currentSchedules]);
+            nextSchedules[index] = { ...nextSchedules[index], ...updatedSchedule };
+          } else {
+            nextSchedules.push(updatedSchedule);
           }
+
+          this.schedulesCache$.next(nextSchedules);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),

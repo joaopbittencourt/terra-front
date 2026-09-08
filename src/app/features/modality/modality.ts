@@ -57,18 +57,16 @@ export class ModalityComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-          this.modalityService.create(result).subscribe({
-            next: (data:any) => {
-              this.notification.showSuccess('Modalidade salva com sucesso');
-            },
-            error: (err: any) => {
-              console.error('Error saving modality', err);
-              this.notification.showError('Erro ao salvar modalidade: ' + (err?.message || err));
-            },
-            complete: () => {
-              this.ngOnInit();
-            }
-          })
+        this.modalityService.create(result).subscribe({
+          next: () => {
+            this.modalityService.refreshModalities();
+            this.notification.showSuccess('Modalidade salva com sucesso');
+          },
+          error: (err: any) => {
+            console.error('Error saving modality', err);
+            this.notification.showError('Erro ao salvar modalidade: ' + (err?.message || err));
+          }
+        });
       }
     });
   }

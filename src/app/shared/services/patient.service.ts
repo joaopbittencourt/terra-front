@@ -79,7 +79,16 @@ export class PatientService {
       .pipe(
         tap(newPatient => {
           const currentPatients = this.patientsCache$.value;
-          this.patientsCache$.next([...currentPatients, newPatient]);
+          const nextPatients = [...currentPatients];
+          const index = nextPatients.findIndex(p => String(p.id) === String(newPatient.id));
+
+          if (index !== -1) {
+            nextPatients[index] = { ...nextPatients[index], ...newPatient } as PatientModel;
+          } else {
+            nextPatients.push(newPatient);
+          }
+
+          this.patientsCache$.next(nextPatients);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),
@@ -102,11 +111,16 @@ export class PatientService {
       .pipe(
         tap(updatedPatient => {
           const currentPatients = this.patientsCache$.value;
-          const index = currentPatients.findIndex(p => p.id === id);
+          const nextPatients = [...currentPatients];
+          const index = nextPatients.findIndex(p => String(p.id) === String(id || updatedPatient.id));
+
           if (index !== -1) {
-            currentPatients[index] = updatedPatient;
-            this.patientsCache$.next([...currentPatients]);
+            nextPatients[index] = { ...nextPatients[index], ...updatedPatient } as PatientModel;
+          } else {
+            nextPatients.push(updatedPatient);
           }
+
+          this.patientsCache$.next(nextPatients);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),

@@ -60,21 +60,9 @@ export class TherapyComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const id = result.id;
         this.therapyService.create(result).subscribe({
-          next: (data:TherapyInterface) => {
-            if (id) {
-            // Editar
-            const index = this.dataSource.findIndex(t => t.id === result.id);
-            if (index !== -1) {
-              this.dataSource[index] = result;
-              this.dataSource = [...this.dataSource];
-            }
-          } else {
-            // Criar
-            result.id = Date.now().toString();
-            this.dataSource = [...this.dataSource, result];
-          }
+          next: () => {
+            this.therapyService.refreshTherapies();
             this.notification.showSuccess('Terapia salva com sucesso');
           },
           error: (err) => {

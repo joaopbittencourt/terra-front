@@ -61,31 +61,16 @@ export class ServicePackageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        if (result.id) {
-          // Update
-          this.servicePackageService.create(result).subscribe({
-            next: () => {
-              this.loadData();
-              this.notification.showSuccess('Pacote de serviço salvo com sucesso');
-            },
-            error: (err) => {
-              console.error('Error updating service package:', err);
-              this.notification.showError('Erro ao salvar pacote de serviço: ' + (err?.message || err));
-            }
-          });
-        } else {
-          // Create
-          this.servicePackageService.create(result).subscribe({
-            next: () => {
-              this.loadData();
-              this.notification.showSuccess('Pacote de serviço salvo com sucesso');
-            },
-            error: (err) => {
-              console.error('Error creating service package:', err);
-              this.notification.showError('Erro ao salvar pacote de serviço: ' + (err?.message || err));
-            }
-          });
-        }
+        this.servicePackageService.create(result).subscribe({
+          next: () => {
+            this.loadData();
+            this.notification.showSuccess('Pacote de serviço salvo com sucesso');
+          },
+          error: (err) => {
+            console.error('Error saving service package:', err);
+            this.notification.showError('Erro ao salvar pacote de serviço: ' + (err?.message || err));
+          }
+        });
       }
     });
   }

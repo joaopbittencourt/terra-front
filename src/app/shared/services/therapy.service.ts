@@ -80,7 +80,16 @@ export class TherapyService {
       .pipe(
         tap(newTherapy => {
           const currentTherapies = this.therapiesCache$.value;
-          this.therapiesCache$.next([...currentTherapies, newTherapy]);
+          const nextTherapies = [...currentTherapies];
+          const index = nextTherapies.findIndex(t => String(t.id) === String(newTherapy.id));
+
+          if (index !== -1) {
+            nextTherapies[index] = { ...nextTherapies[index], ...newTherapy };
+          } else {
+            nextTherapies.push(newTherapy);
+          }
+
+          this.therapiesCache$.next(nextTherapies);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),
@@ -103,11 +112,16 @@ export class TherapyService {
       .pipe(
         tap(updatedTherapy => {
           const currentTherapies = this.therapiesCache$.value;
-          const index = currentTherapies.findIndex(t => t.id === id);
+          const nextTherapies = [...currentTherapies];
+          const index = nextTherapies.findIndex(t => String(t.id) === String(id || updatedTherapy.id));
+
           if (index !== -1) {
-            currentTherapies[index] = updatedTherapy;
-            this.therapiesCache$.next([...currentTherapies]);
+            nextTherapies[index] = { ...nextTherapies[index], ...updatedTherapy };
+          } else {
+            nextTherapies.push(updatedTherapy);
           }
+
+          this.therapiesCache$.next(nextTherapies);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),

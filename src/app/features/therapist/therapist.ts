@@ -72,21 +72,9 @@ export class TherapistComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const id = result.id;
         this.therapistService.create(result).subscribe({
-          next: (data:Therapist) => {    
-          if (id) {
-            // Editar
-            const index = this.dataSource.findIndex(t => t.id === result.id);
-            if (index !== -1) {
-              this.dataSource[index] = result;
-              this.dataSource = [...this.dataSource];
-          }
-        } else {
-          // Criar
-          result.id = Date.now().toString();
-          this.dataSource = [...this.dataSource, result];
-        }
+          next: () => {
+            this.therapistService.refreshTherapists();
             this.notification.showSuccess('Terapeuta salvo com sucesso');
           },
           error: (err: any) => {
@@ -94,7 +82,6 @@ export class TherapistComponent implements OnInit {
             this.notification.showError('Erro ao salvar terapeuta: ' + (err?.message || err));
           }
         });
-    
       }
     });
   }

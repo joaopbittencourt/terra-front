@@ -81,7 +81,16 @@ export class ModalityService {
       .pipe(
         tap(newModality => {
           const currentModalities = this.modalitiesCache$.value;
-          this.modalitiesCache$.next([...currentModalities, newModality]);
+          const nextModalities = [...currentModalities];
+          const index = nextModalities.findIndex(m => String(m.id) === String(newModality.id));
+
+          if (index !== -1) {
+            nextModalities[index] = { ...nextModalities[index], ...newModality };
+          } else {
+            nextModalities.push(newModality);
+          }
+
+          this.modalitiesCache$.next(nextModalities);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),
@@ -104,11 +113,16 @@ export class ModalityService {
       .pipe(
         tap(updatedModality => {
           const currentModalities = this.modalitiesCache$.value;
-          const index = currentModalities.findIndex(m => m.id === id);
+          const nextModalities = [...currentModalities];
+          const index = nextModalities.findIndex(m => String(m.id) === String(id || updatedModality.id));
+
           if (index !== -1) {
-            currentModalities[index] = updatedModality;
-            this.modalitiesCache$.next([...currentModalities]);
+            nextModalities[index] = { ...nextModalities[index], ...updatedModality };
+          } else {
+            nextModalities.push(updatedModality);
           }
+
+          this.modalitiesCache$.next(nextModalities);
           this.errorSubject.next(null);
           this.loadingSubject.next(false);
         }),
