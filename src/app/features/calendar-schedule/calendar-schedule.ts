@@ -294,7 +294,7 @@ export class CalendarScheduleComponent implements OnInit {
         "QUA",
         "QUI",
         "SEX",
-        "SÁB"
+        "SAB"
         // Adicione os outros dias aqui
       ];
     return schedules.filter(schedule => {

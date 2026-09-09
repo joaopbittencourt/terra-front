@@ -1,10 +1,28 @@
 /* Dark dashboard style with starry background */
-html, body { height: 100%; }
-body {
+
+html, body { height: 100%; 
+  color-scheme: dark;
+  background:#2d1b4e;
+  min-height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  color: #e7e7ff;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  color: #e2e2ff;
+
 }
+body {
+  color-scheme: dark;
+  min-height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  color: #e2e2ff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
+
+}
+
+
 
 .mat-mdc-app-background {
   background: transparent;
