@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>{{ guide ? 'Editar guia' : 'Nova guia' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>Paciente</mat-label>
+      <mat-select formControlName="patientId">
+        <mat-option *ngFor="let patient of patients" [value]="patient.id">
+          {{ patientName(patient) }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Selecione um paciente.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Plano de saúde</mat-label>
+      <mat-select formControlName="healthPlanId">
+        <mat-option *ngFor="let plan of healthPlans" [value]="plan.id">
+          {{ plan.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Selecione um plano de saúde.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Registro ANS</mat-label>
+      <input matInput [value]="selectedHealthPlan?.registrationNumber || ''" readonly>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Número da guia</mat-label>
+      <input matInput formControlName="guideNumber" autocomplete="off">
+      <mat-error>Informe o número da guia.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-row">
+      <mat-label>Código de autorização</mat-label>
+      <input matInput formControlName="authorizationCode" autocomplete="off">
+      <mat-error>Informe o código de autorização.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data de validade</mat-label>
+      <input matInput type="date" formControlName="expirationDate">
+      <mat-error>Informe a data de validade.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Total de sessões autorizadas</mat-label>
+      <input matInput type="number" min="1" formControlName="totalSessionsAuthorized">
+      <mat-error>Informe pelo menos uma sessão autorizada.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Sessões usadas</mat-label>
+      <input matInput type="number" min="0" formControlName="usedSessions">
+      <mat-error *ngIf="form.get('usedSessions')?.hasError('min')">O valor não pode ser negativo.</mat-error>
+    </mat-form-field>
+
+    <p class="form-error full-row" *ngIf="form.hasError('usedSessionsExceedTotal')">
+      Sessões usadas não podem exceder o total autorizado.
+    </p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit">Salvar</button>
+  </mat-dialog-actions>
+</form>

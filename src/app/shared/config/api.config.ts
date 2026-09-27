@@ -21,6 +21,8 @@ export const API_CONFIG = {
     therapistsCreate: '/team/save-team',
     healthPlans: '/healthinsurance',
     healthPlansCreate: '/healthinsurance/save-healthinsurance',
+    guides: '/guide',
+    guidesCreate: '/guide/save-guide',
     servicePackages: '/service-package',
     servicePackageCreate: '/service-package/save-service-package',
     patientsCreate: '/patient/save-patient',

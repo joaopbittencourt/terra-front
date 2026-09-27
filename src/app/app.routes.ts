@@ -15,6 +15,7 @@ import { CalendarScheduleComponent } from './features/calendar-schedule/calendar
 //import { AuthGuard } from './guard/auth-guard';
 import { AppComponent } from './app';
 import { Dashboard } from './features/dashboard/dashboard';
+import { GuideComponent } from './features/guide/guide';
 
 export const routes: Routes = [
 
@@ -74,6 +75,14 @@ export const routes: Routes = [
     path: 'health-plans',
     component: HealthPlansComponent,
     canActivate : [canActivateAuthRole],
+    data: {
+      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
+    }
+  },
+  {
+    path: 'guides',
+    component: GuideComponent,
+    canActivate: [canActivateAuthRole],
     data: {
       roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
     }

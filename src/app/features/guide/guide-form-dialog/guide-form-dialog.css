@@ -1,0 +1,30 @@
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 16px;
+  padding-top: 8px;
+}
+
+.form-grid mat-form-field {
+  width: 100%;
+}
+
+.full-row {
+  grid-column: 1 / -1;
+}
+
+.form-error {
+  margin: -4px 0 8px;
+  color: #b3261e;
+  font-size: 12px;
+}
+
+@media (max-width: 560px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-row {
+    grid-column: auto;
+  }
+}
