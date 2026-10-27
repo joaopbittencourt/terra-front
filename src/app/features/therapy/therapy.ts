@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,11 +35,12 @@ import { NotificationService } from '../../services/notification/notification';
   templateUrl: './therapy.html',
   styleUrl: './therapy.css'
 })
-export class TherapyComponent implements OnInit {
+export class TherapyComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   //displayedColumns: string[] = ['name', 'modalities', 'active', 'actions'];
   displayedColumns: string[] = ['name', 'active', 'actions'];
 
-  dataSource: TherapyInterface[] = [];
+  dataSource = new MatTableDataSource<TherapyInterface>([]);
 
   private notification = inject(NotificationService);
 
@@ -47,9 +48,13 @@ export class TherapyComponent implements OnInit {
 
   ngOnInit(): void {
     this.therapyService.getAll().subscribe({
-      next: (therapies: TherapyInterface[]) => { this.dataSource = therapies; },
+      next: (therapies: TherapyInterface[]) => { this.dataSource.data = therapies; },
       error: (err) => { console.error('Error loading therapies', err); this.notification.showError('Erro ao carregar terapias: ' + (err?.message || err)); }
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 
   openForm(therapy?: TherapyInterface): void {
@@ -81,14 +86,13 @@ export class TherapyComponent implements OnInit {
   onDelete(therapy: TherapyInterface): void {
     const name = therapy.name || 'Therapy';
     if (confirm(`Are you sure you want to delete "${name}"?`)) {
-      this.dataSource = this.dataSource.filter(t => t.id !== therapy.id);
+      this.dataSource.data = this.dataSource.data.filter(t => t.id !== therapy.id);
     }
   }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    // Implementar lógica de filtro aqui
-    console.log('Filter:', filterValue);
+    this.dataSource.filter = filterValue;
   }
 
   //getModalities(therapy: TherapyInterface): string {

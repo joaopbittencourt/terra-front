@@ -12,9 +12,13 @@ import { NotificationService } from '../../services/notification/notification';
 export class PatientService {
   private notification = inject(NotificationService);
   private apiUrl = getApiUrl('patients'); // Parameterized remote API URL
+  private apiUrlByTerapist = getApiUrl('patientsByTerapist'); // Parameterized remote API URL for patients by therapist
   private apiUrlCreate = getApiUrl('patientsCreate'); // URL for creating patients
   private patientsCache$ = new BehaviorSubject<PatientModel[]>([]);
   patients$ = this.patientsCache$.asObservable();
+  
+  private patientsByTerapistCache$ = new BehaviorSubject<PatientModel[]>([]);
+  patientsByTerapist$ = this.patientsByTerapistCache$.asObservable();
   
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
@@ -24,6 +28,7 @@ export class PatientService {
 
   constructor(private http: HttpClient) {
     this.loadAllPatients();
+    this.loadAllPatientsByTherapist();
   }
 
   /**
@@ -49,11 +54,38 @@ export class PatientService {
       .subscribe();
   }
 
+    private loadAllPatientsByTherapist(): void {
+    this.loadingSubject.next(true);
+    this.http.get<PatientModel[]>(this.apiUrlByTerapist)
+      .pipe(
+        tap(data => {
+          this.patientsByTerapistCache$.next(data);
+          this.errorSubject.next(null);
+          this.loadingSubject.next(false);
+        }),
+        catchError(error => {
+          console.error('Error loading patients:', error);
+          this.notification.showError('Erro ao carregar pacientes: ' + (error?.message || error));
+          this.errorSubject.next('Error loading patients from API');
+          this.loadingSubject.next(false);
+          return of([]);
+        })
+      )
+      .subscribe();
+  }
+
   /**
    * Get all patients
    */
   getAll(): Observable<PatientModel[]> {
     return this.patientsCache$.asObservable();
+  }
+
+   /**
+   * Get all patients
+   */
+  getAllByTerapist(): Observable<PatientModel[]> {
+    return this.patientsByTerapistCache$.asObservable();
   }
 
   /**

@@ -20,8 +20,21 @@ export class AuthenticationService {
     return this.keycloakService.tokenParsed?.['preferred_username'] || ''    ;
   }
 
+  get name(): string {
+    return this.keycloakService.tokenParsed?.['name'] || ''    ;
+  }
+
+  get email(): string {
+    return this.keycloakService.tokenParsed?.['email'] || '';
+  }
+
   isLoggedIn(): boolean {
     return this.keycloakService.authenticated || false; 
+  }
+
+  hasRoles(roles: string[]): boolean {
+    const userRoles = this.keycloakService.tokenParsed?.['realm_access']?.['roles'] || [];
+    return roles.some(role => userRoles.includes(role));
   }
 
   logout(): void {

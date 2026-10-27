@@ -15,6 +15,7 @@ import { CalendarScheduleComponent } from './features/calendar-schedule/calendar
 //import { AuthGuard } from './guard/auth-guard';
 import { AppComponent } from './app';
 import { Dashboard } from './features/dashboard/dashboard';
+import { TherapistDashboard } from './features/therapist-dashboard/therapist-dashboard';
 import { GuideComponent } from './features/guide/guide';
 
 export const routes: Routes = [
@@ -28,7 +29,15 @@ export const routes: Routes = [
     component: Dashboard,
     canActivate : [canActivateAuthRole],
     data: {
-        roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_THERAPIST", "ROLE_ADMIN"]
+        roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_TERAPIST", "ROLE_ADMIN"]
+    }
+  },
+  {
+    path: 'dashboard/terapeuta',
+    component: TherapistDashboard,
+    canActivate: [canActivateAuthRole],
+    data: {
+      roles: ['ROLE_TERAPIST']
     }
   },
   {
@@ -36,7 +45,7 @@ export const routes: Routes = [
     component: PatientComponent,
     canActivate : [canActivateAuthRole],
     data: {
-        roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_THERAPIST", "ROLE_ADMIN"]
+        roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_TERAPIST", "ROLE_ADMIN"]
     }
   },
   {
@@ -44,7 +53,7 @@ export const routes: Routes = [
     component: PatientStepperComponent,
     canActivate : [canActivateAuthRole],
     data: {
-        roles: ["ROLE_ADMIN_ASSISTANT",  "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
+        roles: ["ROLE_ADMINASSISTANT",  "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
     }
   },
   {
@@ -52,7 +61,7 @@ export const routes: Routes = [
     component: PatientStepperComponent,
     canActivate : [canActivateAuthRole],
     data: {
-        roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
+        roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN", "ROLE_TERAPIST"]
     }
   },
   {
@@ -60,7 +69,7 @@ export const routes: Routes = [
     component: PatientViewComponent,
     canActivate: [canActivateAuthRole],
     data: { 
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_THERAPIST", "ROLE_ADMIN"] 
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_TERAPIST", "ROLE_ADMIN", "ROLE_TERAPIST"] 
     }
   },
   {
@@ -68,7 +77,7 @@ export const routes: Routes = [
     component: ModalityComponent,
     canActivate : [canActivateAuthRole],
     data: {
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
     }
   },
   {
@@ -76,7 +85,7 @@ export const routes: Routes = [
     component: HealthPlansComponent,
     canActivate : [canActivateAuthRole],
     data: {
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
     }
   },
   {
@@ -84,7 +93,7 @@ export const routes: Routes = [
     component: GuideComponent,
     canActivate: [canActivateAuthRole],
     data: {
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
     }
   },
   {
@@ -92,7 +101,7 @@ export const routes: Routes = [
     component: SessionComponent,
     canActivate : [canActivateAuthRole],
     data: {
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_THERAPIST", "ROLE_ADMIN"]
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_TERAPIST", "ROLE_ADMIN"]
     }
   },
   {
@@ -100,7 +109,7 @@ export const routes: Routes = [
     component: TherapyComponent,
     canActivate : [canActivateAuthRole],
     data: {
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
     }
   },
   {
@@ -108,7 +117,7 @@ export const routes: Routes = [
     component: TherapistComponent,
     canActivate : [canActivateAuthRole],
     data: {
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_ADMIN"]
     }
   },
   {
@@ -116,7 +125,7 @@ export const routes: Routes = [
     component: ServicePackageComponent,
     canActivate : [canActivateAuthRole],
     data: {
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_ADMIN"]
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_ADMIN"]
     }
   },
   {
@@ -124,7 +133,7 @@ export const routes: Routes = [
     component: CalendarScheduleComponent,
     canActivate : [canActivateAuthRole],
     data: {
-      roles: ["ROLE_ADMIN_ASSISTANT", "ROLE_RECEPTIONIST", "ROLE_THERAPY", "ROLE_ADMIN"]
+      roles: ["ROLE_ADMINASSISTANT", "ROLE_RECEPTIONIST", "ROLE_TERAPIST", "ROLE_ADMIN"]
     }
   },
   // Keep old routes for backward compatibility

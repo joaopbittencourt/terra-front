@@ -10,6 +10,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileDialogComponent } from './shared/profile-dialog/profile-dialog';
 
 @Component({
   selector: 'app-root',
@@ -35,9 +37,18 @@ export class AppComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   private auth = inject(AuthenticationService);
   private router = inject(Router);
+  private dialog = inject(MatDialog);
 
   isLoggedIn(): boolean {
     return this.auth.isLoggedIn();
+  }
+  
+  hasRoles(roles: string[]): boolean {
+    return this.auth.hasRoles(roles);
+  }
+
+  toggleSidenav(): void {
+    this.sidenav.toggle();
   }
   
   logout(): void {
@@ -47,6 +58,16 @@ export class AppComponent {
   }
 
   getUserName(): string {
-    return this.auth.userName || '';
+    return this.auth.name || this.auth.userName || '';
+  }
+
+  openProfile(): void {
+    this.dialog.open(ProfileDialogComponent, {
+      width: '400px',
+      maxWidth: 'calc(100vw - 32px)',
+      data: { name: this.auth.name || this.auth.userName, email: this.auth.email }
+    }).afterClosed().subscribe(result => {
+      if (result === 'logout') this.logout();
+    });
   }
 }

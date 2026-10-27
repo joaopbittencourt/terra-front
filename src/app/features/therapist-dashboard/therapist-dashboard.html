@@ -1,0 +1,40 @@
+<div class="dashboard-cards">
+  <a class="card-link" routerLink="/calendar-schedule" title="Ver meus agendamentos">
+    <mat-card class="dashboard-card card-schedule">
+      <div class="card-left">
+        <mat-icon class="card-icon">event_available</mat-icon>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Meus agendamentos ativos</div>
+        <div class="card-value">{{ scheduledTherapiesCount }}</div>
+        <div class="card-sub">Atendimentos vinculados a mim</div>
+      </div>
+    </mat-card>
+  </a>
+
+  <a class="card-link" routerLink="/patient" title="Ver meus pacientes">
+    <mat-card class="dashboard-card card-patients">
+      <div class="card-left">
+        <mat-icon class="card-icon">person</mat-icon>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Meus pacientes</div>
+        <div class="card-value">{{ patientsCount }}</div>
+        <div class="card-sub">Pacientes associados ao meu perfil</div>
+      </div>
+    </mat-card>
+  </a>
+
+  <a class="card-link" routerLink="/calendar-schedule" title="Ver atendimentos de hoje">
+    <mat-card class="dashboard-card card-therapists">
+      <div class="card-left">
+        <mat-icon class="card-icon">today</mat-icon>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Atendimentos hoje</div>
+        <div class="card-value">{{ todayAppointmentsCount }}</div>
+        <div class="card-sub">Agendamentos ativos para hoje</div>
+      </div>
+    </mat-card>
+  </a>
+</div>

@@ -17,21 +17,19 @@
         <td mat-cell *matCellDef="let guide">{{ patientName(guide.patientId) }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="healthPlan">
-        <th mat-header-cell *matHeaderCellDef>Plano de saúde / ANS</th>
-        <td mat-cell *matCellDef="let guide">{{ healthPlanName(guide.healthPlanId) }}</td>
-      </ng-container>
-
       <ng-container matColumnDef="guideNumber">
         <th mat-header-cell *matHeaderCellDef>Nº da guia</th>
         <td mat-cell *matCellDef="let guide">{{ guide.guideNumber }}</td>
       </ng-container>
 
       <ng-container matColumnDef="authorizationCode">
-        <th mat-header-cell *matHeaderCellDef>Código de autorização</th>
+        <th mat-header-cell *matHeaderCellDef>Código de autorização / Senha</th>
         <td mat-cell *matCellDef="let guide">{{ guide.authorizationCode }}</td>
       </ng-container>
-
+      <ng-container matColumnDef="authorizationDate">
+        <th mat-header-cell *matHeaderCellDef>Data de autorização</th>
+        <td mat-cell *matCellDef="let guide">{{ guide.authorizationDate | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
       <ng-container matColumnDef="expirationDate">
         <th mat-header-cell *matHeaderCellDef>Validade</th>
         <td mat-cell *matCellDef="let guide">{{ guide.expirationDate | date:'dd/MM/yyyy' }}</td>
@@ -69,5 +67,6 @@
         <td class="mat-cell empty-state" colspan="8">Nenhuma guia cadastrada</td>
       </tr>
     </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecione a página de guias"></mat-paginator>
   </div>
 </section>

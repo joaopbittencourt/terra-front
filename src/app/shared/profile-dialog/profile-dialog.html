@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Meu perfil</h2>
+
+<mat-dialog-content class="profile-content">
+  <div class="profile-avatar" aria-hidden="true">
+    <mat-icon>person</mat-icon>
+  </div>
+  <div class="profile-details">
+    <p class="profile-name">{{ data.name || 'Usuário' }}</p>
+    <p class="profile-email">{{ data.email || 'E-mail não informado' }}</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Fechar</button>
+  <button mat-flat-button color="warn" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Sair
+  </button>
+</mat-dialog-actions>

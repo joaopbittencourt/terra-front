@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,10 +33,11 @@ import { NotificationService } from '../../services/notification/notification';
   templateUrl: './service-package.html',
   styleUrl: './service-package.css'
 })
-export class ServicePackageComponent implements OnInit {
+export class ServicePackageComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['name', 'therapy', 'qtdSessions', 'price', 'active', 'actions'];
 
-  dataSource: ServicePackage[] = [];
+  dataSource = new MatTableDataSource<ServicePackage>([]);
 
   private notification = inject(NotificationService);
 
@@ -46,9 +47,13 @@ export class ServicePackageComponent implements OnInit {
     this.loadData();
   }
 
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
+
   loadData(): void {
     this.servicePackageService.getAll().subscribe({
-      next: (servicePackages: ServicePackage[]) => { this.dataSource = servicePackages; },
+      next: (servicePackages: ServicePackage[]) => { this.dataSource.data = servicePackages; },
       error: (err) => { console.error('Error loading service packages:', err); this.notification.showError('Erro ao carregar pacotes de serviço: ' + (err?.message || err)); }
     });
   }
@@ -97,7 +102,6 @@ export class ServicePackageComponent implements OnInit {
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    // Filter logic can be implemented later
-    console.log('Filter:', filterValue);
+    this.dataSource.filter = filterValue;
   }
 }

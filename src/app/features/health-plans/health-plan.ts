@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { healthInsurance } from '../../shared/data/health-plan.interface';
 import { HealthPlanService } from '../../shared/services/health-plan.service';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
@@ -12,12 +13,13 @@ import { NotificationService } from '../../services/notification/notification';
 @Component({
   selector: 'app-health-plans',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatDialogModule],
+  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatButtonModule, MatIconModule, MatDialogModule],
   templateUrl: './health-plan.html',
   styleUrl: './health-plan.css'
 })
-export class HealthPlansComponent {
-  plans: healthInsurance[] = [];
+export class HealthPlansComponent implements AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  plans = new MatTableDataSource<healthInsurance>([]);
   displayedColumns = ['name', 'effetiveDate', 'dateOfValidity', 'status', 'registrationNumber', 'actions'];
   private notification = inject(NotificationService);
 
@@ -25,10 +27,14 @@ export class HealthPlansComponent {
     this.loadPlans();
   }
 
+  ngAfterViewInit(): void {
+    this.plans.paginator = this.paginator;
+  }
+
   loadPlans() {
     this.healthPlanService.getAll().subscribe((plans: healthInsurance[]) => {
       console.log('Health Plans loaded:', plans);
-      this.plans = plans;
+      this.plans.data = plans;
     });
   }
 

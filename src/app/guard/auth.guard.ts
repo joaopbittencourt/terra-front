@@ -30,16 +30,16 @@ const isAccessAllowed = async (
     let result = false;
     roles.forEach((role: any) => {
       //if(Object.values(grantedRoles.realmRoles).some((roles) => roles.includes(roles))) {
+        console.log('grantedRoles.realmRoles', grantedRoles.realmRoles);
         if(grantedRoles.realmRoles.find((grantedRole: string) => grantedRole === role)) {
           result = true;
-        } 
+        }
          
       
     })
     return result;
   }
   const router = inject(Router);
-
   if (authenticated && hasRequiredRole(requiredRole)) {
     return true;
     

@@ -1,7 +1,7 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,20 +33,25 @@ import { NotificationService } from '../../services/notification/notification';
   templateUrl: './modality.html',
   styleUrl: './modality.css'
 })
-export class ModalityComponent implements OnInit {
+export class ModalityComponent implements OnInit, AfterViewInit {
   private notification = inject(NotificationService);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['modality', 'status', 'actions'];
 
-  dataSource: ModalityInterface[] = [];
+  dataSource = new MatTableDataSource<ModalityInterface>([]);
 
   constructor(private dialog: MatDialog, private modalityService:ModalityService) {}
 
   ngOnInit(): void {
     // Load data from service
     this.modalityService.getAll().subscribe({
-      next: (modalities: ModalityInterface[]) => { this.dataSource = modalities; },
+      next: (modalities: ModalityInterface[]) => { this.dataSource.data = modalities; },
       error: (err) => { console.error('Error loading modalities', err); this.notification.showError('Erro ao carregar modalidades: ' + (err?.message || err)); }
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 
   openForm(modality?: ModalityInterface): void {
@@ -78,13 +83,12 @@ export class ModalityComponent implements OnInit {
   onDelete(modality: ModalityInterface): void {
     const name = modality.name  || 'Modality';
     if (confirm(`Are you sure you want to delete "${name}"?`)) {
-      this.dataSource = this.dataSource.filter(m => m.id !== modality.id);
+      this.dataSource.data = this.dataSource.data.filter(m => m.id !== modality.id);
     }
   }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    // Implementar lógica de filtro aqui
-    console.log('Filter:', filterValue);
+    this.dataSource.filter = filterValue;
   }
 }

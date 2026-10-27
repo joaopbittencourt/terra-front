@@ -1,7 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -37,10 +37,11 @@ import { NotificationService } from '../../services/notification/notification';
   templateUrl: './therapist.html',
   styleUrl: './therapist.css'
 })
-export class TherapistComponent implements OnInit {
+export class TherapistComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = ['name', 'email', 'cpf', 'professionalRegistration', 'therapies', 'active', 'actions'];
 
-  dataSource: Therapist[] = [];
+  dataSource = new MatTableDataSource<Therapist>([]);
 
   // Sample therapies for the form
   availableTherapies: Therapy[] = [];
@@ -54,9 +55,13 @@ export class TherapistComponent implements OnInit {
   ngOnInit(): void {
     // Aqui vamos carregar dados do serviço
     this.therapistService.getAll().subscribe((therapists: Therapist[]) => {
-      this.dataSource = therapists;
+      this.dataSource.data = therapists;
       this.getAllTherapies(); // Carrega as terapias disponíveis
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 
   openForm(therapist?: Therapist): void {
@@ -98,14 +103,13 @@ export class TherapistComponent implements OnInit {
   onDelete(therapist: Therapist): void {
     const name = therapist.name || 'Therapist';
     if (confirm(`Are you sure you want to delete "${name}"?`)) {
-      this.dataSource = this.dataSource.filter(t => t.id !== therapist.id);
+      this.dataSource.data = this.dataSource.data.filter(t => t.id !== therapist.id);
     }
   }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
-    // Implementar lógica de filtro aqui
-    console.log('Filter:', filterValue);
+    this.dataSource.filter = filterValue;
   }
 
   getTherapiesText(therapies?: string[]): string {

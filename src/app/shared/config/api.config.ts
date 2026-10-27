@@ -12,6 +12,7 @@ export const API_CONFIG = {
   // Specific endpoints
   endpoints: {
     patients: '/patient',
+    patientsByTerapist: '/patient/patient-terapist',
     guardians: '/guardian',
     modalities: '/modality',
     modalitiesCreate: '/modality/save-modality',
@@ -32,6 +33,7 @@ export const API_CONFIG = {
     sessions: '/session',
     sessionsCreate: '/session/save-session',
     schedulesActive: '/schedule/active',
+    schedulesActiveByTerapist: '/schedule/active-terapist',
     registerAppointment: '/register-appointment/register-register-appointment',
     registerSession: '/session/registerSession',
     contracts: '/contract',

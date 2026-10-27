@@ -14,6 +14,7 @@ export class ScheduleService {
   private notification = inject(NotificationService);
   private apiUrl = getApiUrl('schedules'); // Parameterized remote API URL
   private apiUrlActive = getApiUrl('schedulesActive');
+  private apiUrlActiveByTerapist = getApiUrl('schedulesActiveByTerapist'); // Parameterized remote API URL for active schedules by therapist
   private apiUrlCreate = getApiUrl('scheduleCreate'); // Parameterized remote API URL for create/update
 
   private schedulesCache$ = new BehaviorSubject<Schedule[]>([]);
@@ -26,6 +27,8 @@ export class ScheduleService {
   private schedulesActiveCache$ = new BehaviorSubject<Schedule[]>([]);
   schedulesActive$ = this.schedulesActiveCache$.asObservable();
 
+  private schedulesActiveByTerapistCache$ = new BehaviorSubject<Schedule[]>([]);
+  schedulesActiveByTerapist$ = this.schedulesActiveByTerapistCache$.asObservable();
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
@@ -79,6 +82,31 @@ export class ScheduleService {
         })
       )
       .subscribe();
+  }
+
+  private loadActiveSchedulesByTerapist(): void {
+    this.loadingSubject.next(true);
+    this.http.get<Schedule[]>(this.apiUrlActiveByTerapist)
+      .pipe(
+        tap(data => {
+          this.schedulesActiveByTerapistCache$.next(data);
+          this.errorSubject.next(null);
+          this.loadingSubject.next(false);
+        }),
+        catchError(error => {
+          console.error('Error loading schedules:', error);
+          this.notification.showError('Erro ao buscar agendamentos: ' + (error?.message || error));
+          this.errorSubject.next('Error loading schedules from API');
+          this.loadingSubject.next(false);
+          return of([]);
+        })
+      )
+      .subscribe();
+  }
+
+  getActiveSchedulesByTerapist(): Observable<Schedule[]> {
+    this.loadActiveSchedulesByTerapist();
+    return this.schedulesActiveByTerapist$;
   }
 
   getAllByContract(contractId: string): Observable<any> {

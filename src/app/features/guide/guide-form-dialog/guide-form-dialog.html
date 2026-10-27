@@ -13,16 +13,6 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Plano de saúde</mat-label>
-      <mat-select formControlName="healthPlanId">
-        <mat-option *ngFor="let plan of healthPlans" [value]="plan.id">
-          {{ plan.name }}
-        </mat-option>
-      </mat-select>
-      <mat-error>Selecione um plano de saúde.</mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
       <mat-label>Registro ANS</mat-label>
       <input matInput [value]="selectedHealthPlan?.registrationNumber || ''" readonly>
     </mat-form-field>
@@ -34,9 +24,15 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-row">
-      <mat-label>Código de autorização</mat-label>
+      <mat-label>Código de autorização ou Senha</mat-label>
       <input matInput formControlName="authorizationCode" autocomplete="off">
       <mat-error>Informe o código de autorização.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data de autorização</mat-label>
+      <input matInput type="date" formControlName="authorizationDate">
+      <mat-error>Informe a data de autorização.</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">

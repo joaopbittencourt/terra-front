@@ -43,9 +43,9 @@ export class GuideFormDialogComponent implements OnInit {
   ) {
     this.form = this.formBuilder.group({
       patientId: [guide?.patientId ?? '', Validators.required],
-      healthPlanId: [guide?.healthPlanId ?? '', Validators.required],
       guideNumber: [guide?.guideNumber ?? '', Validators.required],
       authorizationCode: [guide?.authorizationCode ?? '', Validators.required],
+      authorizationDate: [guide?.authorizationDate ?? '', Validators.required],
       expirationDate: [guide?.expirationDate ?? '', Validators.required],
       totalSessionsAuthorized: [guide?.totalSessionsAuthorized ?? 1, [Validators.required, Validators.min(1)]],
       usedSessions: [guide?.usedSessions ?? 0, [Validators.required, Validators.min(0)]],
