@@ -1,0 +1,13 @@
+enum CategoryPaymentEnum {
+    THERAPIST,
+    BUSINESSPARTNER,
+    LOAN,
+    CREDTIT,
+    LEGALDEPARTMENT,
+    EDUCATION,
+    WATHER,
+    ENERGY,
+    CONTABLITY,
+    MOBILITY,
+    WITHDRAWAL
+}

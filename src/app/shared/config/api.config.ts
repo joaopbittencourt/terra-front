@@ -39,6 +39,10 @@ export const API_CONFIG = {
     contracts: '/contract',
     contractsCreate: '/contract/save-contract',
     scheduleCreate: '/schedule/register-schedule',
+    payment: '/payment',
+    deposit: '/deposit',
+    therapistMonthlyClosing: '/therapist-monthly-closing',
+    financialflow: '/financialflow',
   },
   
   // Timeouts (in ms)
@@ -94,4 +98,22 @@ export function getApiUrlWithFilter(
     return `${baseUrl}/${filter}/${value}`;
   }
   return `${baseUrl}/filter/${filter}`;
+}
+
+/**
+ * Function to build filter URLs
+ * 
+ * @param endpoint - Endpoint name
+ * @param filter - Filter name (ex: 'active', 'cpf')
+ * @param value - Filter value (optional)
+ * @returns Complete URL with filter
+ */
+export function getApiUrlWithFilterThowValue(
+  endpoint: keyof typeof API_CONFIG.endpoints,
+  value: string,
+  value2?: string
+): string {
+  const baseUrl = getApiUrl(endpoint);
+
+    return `${baseUrl}/${value}/${value2}`;
 }
